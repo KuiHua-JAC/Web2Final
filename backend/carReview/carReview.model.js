@@ -1,50 +1,11 @@
-const { MongoClient, CURSOR_FLAGS } = require("mongodb");
-const { DatabaseError } = require("./DatabaseError");
-const { InvalidInputError } = require("./InvalidInputError");
-const validateUtils = require("./validateUtils");
+const { carReviewCollection } = require("../mongodb-initialize.js");
+const { DatabaseError } = require("../error/DatabaseError.js");
+const { InvalidInputError } = require("../error/InvalidInputError.js");
+const validateUtils = require("./validateUtils.js");
 const validator = require("validator");
-const collectionName = "carReview";
-const logger = require("../logger");
+const logger = require("../logger.js");
 const MIN_SCORE = 0,
   MAX_SCORE = 5;
-let client;
-let carReviewsCollection;
-
-/**
- * Initializes a database if not already existing then connects to it. Depending on the reset flag, the existing collection will either be used or dropped and recreated.
- * @param {string} dbName The name of the database to connect to/initialize if not already existing
- * @param {boolean} resetFlag A flag indicating whether the existing collection should be used or dropped
- * @param {string} url The address of the database to connect to
- * @throws {DatabaseError} if any error occurs during initialization/connection
- */
-async function initialize(dbName, resetFlag, url) {
-  try {
-    client = new MongoClient(url); // store connected client for use while the app is running
-    await client.connect();
-    logger.info("Connected to MongoDb");
-    db = client.db(dbName);
-
-    // Check to see if the pokemons collection exists
-    collectionCursor = await db.listCollections({ name: collectionName });
-    collectionArray = await collectionCursor.toArray();
-
-    //Resets the database if flag is true. Error might happen if there is a collection with the wrong name
-    if (collectionArray.length > 0 && resetFlag)
-      await db.collection(collectionName).drop();
-
-    if (collectionArray.length == 0) {
-      // collation specifying case-insensitive collection
-      const collation = { locale: "en", strength: 1 };
-      // No match was found, so create new collection
-      await db.createCollection(collectionName, { collation: collation });
-    }
-
-    carReviewsCollection = db.collection(collectionName); // convenient access to collection
-  } catch (e) {
-    logger.error("Error while initializing database: " + e.message);
-    throw new DatabaseError(`Error while initializing database: ${e.message}`);
-  }
-}
 
 /**
  * Adds a new document to the collection, which is a car review that contains a title, description and score.
@@ -56,7 +17,7 @@ async function initialize(dbName, resetFlag, url) {
  */
 async function addCarReview(title, description, score) {
   validateUtils.isValid(title, description, score, MIN_SCORE, MAX_SCORE);
-  let carToAdd = await carReviewsCollection.insertOne({
+  let carToAdd = await carReviewCollection.insertOne({
     title: title,
     description: description,
     score: score,
@@ -80,7 +41,7 @@ async function getSingleCarReviewByScore(score) {
         `Score must be between ${MIN_SCORE} and ${MAX_SCORE}`
       );
 
-    let carDocument = await carReviewsCollection.findOne({ score: score });
+    let carDocument = await carReviewCollection.findOne({ score: score });
     if (!carDocument) throw new DatabaseError("Could not find the car review");
 
     return carDocument;
@@ -104,7 +65,7 @@ async function getSingleCarReviewByScore(score) {
  * @throws {DatabaseError} if there is no cars in the database
  */
 async function getAllCarReviews() {
-  let carCollectionArray = await carReviewsCollection.find().toArray();
+  let carCollectionArray = await carReviewCollection.find().toArray();
   if (carCollectionArray.length == 0)
     throw new DatabaseError("No car reviews were found");
   return carCollectionArray;
@@ -130,7 +91,7 @@ async function updateOneCarReview(titleOfUpdate, newScore) {
       );
 
     // Updates one car review score based on the title of the review
-    let updatedDocument = await carReviewsCollection.updateOne(
+    let updatedDocument = await carReviewCollection.updateOne(
       { title: titleOfUpdate },
       { $set: { score: newScore } }
     );
@@ -168,7 +129,7 @@ async function deleteOneCarReview(titleToDelete) {
     if (validator.isEmpty(titleToDelete, { ignore_whitespace: true }))
       //Makes sure the title is not empty
       throw new InvalidInputError("Car review title must not be empty");
-    let carDelete = await carReviewsCollection.deleteOne({
+    let carDelete = await carReviewCollection.deleteOne({
       title: titleToDelete,
     });
 
@@ -189,33 +150,20 @@ async function deleteOneCarReview(titleToDelete) {
     else throw e;
   }
 }
-/**
- * Closes the database connection
- */
-async function close() {
-  try {
-    await client.close();
-    logger.info("MongoDb connection closed");
-  } catch (e) {
-    logger.warn(e.message);
-  }
-}
 
 /**
  * Returns the collection connection so it can be used externally
  * @returns The car review collection
  */
 function getCollection() {
-  return carReviewsCollection;
+  return carReviewCollection;
 }
 
 module.exports = {
-  initialize,
   addCarReview,
   updateOneCarReview,
   getSingleCarReviewByScore,
   deleteOneCarReview,
   getAllCarReviews,
-  close,
   getCollection,
 };

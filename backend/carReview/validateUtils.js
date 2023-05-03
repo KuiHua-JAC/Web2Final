@@ -1,5 +1,5 @@
 const validator = require("validator");
-const { InvalidInputError } = require("./InvalidInputError");
+const { InvalidInputError } = require("../error/InvalidInputError.js");
 
 /**
  * Method to validate the information to be stored in the database

@@ -1,10 +1,10 @@
+const model = require("./carReview.model.js");
 const express = require("express");
-const { DatabaseError } = require("../models/DatabaseError.js");
-const { InvalidInputError } = require("../models/InvalidInputError.js");
-const model = require("../models/carReviewModelMongoDb.js");
+const { DatabaseError } = require("../error/DatabaseError.js");
+const { InvalidInputError } = require("../error/InvalidInputError.js");
 const router = express.Router();
 const routeRoot = "/";
-const logger = require("../logger");
+const logger = require("../logger.js");
 
 // CREATE
 /**
