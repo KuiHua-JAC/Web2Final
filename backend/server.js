@@ -8,3 +8,7 @@ const url =
 initialize("AutoFinder", url).then(
   app.listen(port) // Run the server
 );
+
+// MONGODB_PWD="foqjoj-denMe0-morged"
+// URL_PRE ="mongodb+srv://mongoose:"
+// URL_POST="@webiiasg1.xz3pud8.mongodb.net/?retryWrites=true&w=majority"
