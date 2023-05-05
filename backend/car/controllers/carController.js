@@ -2,7 +2,9 @@ const express = require('express');
 const router = express.Router();
 const routeRoot = '/';
 const model = require('../models/carModelMongoDb.js');
-const logger=require('pino')();
+const logger = require("../../logger.js");
+const { DatabaseError } = require("../error/DatabaseError.js");
+const { InvalidInputError } = require("../error/InvalidInputError.js");
 
 /**
 Handles HTTP GET requests to the '/new' endpoint to add a new car to the database.
