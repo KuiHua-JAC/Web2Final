@@ -1,4 +1,4 @@
-const { carReviewCollection } = require("../mongodb-initialize.js");
+const { getCarReviewCollection } = require("../dbConnection.js");
 const { DatabaseError } = require("../error/DatabaseError.js");
 const { InvalidInputError } = require("../error/InvalidInputError.js");
 const validateUtils = require("./validateUtils.js");
@@ -17,7 +17,7 @@ const MIN_SCORE = 0,
  */
 async function addCarReview(title, description, score) {
   validateUtils.isValid(title, description, score, MIN_SCORE, MAX_SCORE);
-  let carToAdd = await carReviewCollection.insertOne({
+  let carToAdd = getCarReviewCollection().insertOne({
     title: title,
     description: description,
     score: score,
@@ -41,7 +41,7 @@ async function getSingleCarReviewByScore(score) {
         `Score must be between ${MIN_SCORE} and ${MAX_SCORE}`
       );
 
-    let carDocument = await carReviewCollection.findOne({ score: score });
+    let carDocument = await getCarReviewCollection().findOne({ score: score });
     if (!carDocument) throw new DatabaseError("Could not find the car review");
 
     return carDocument;
@@ -65,7 +65,7 @@ async function getSingleCarReviewByScore(score) {
  * @throws {DatabaseError} if there is no cars in the database
  */
 async function getAllCarReviews() {
-  let carCollectionArray = await carReviewCollection.find().toArray();
+  let carCollectionArray = await getCarReviewCollection.find().toArray();
   if (carCollectionArray.length == 0)
     throw new DatabaseError("No car reviews were found");
   return carCollectionArray;
@@ -91,7 +91,7 @@ async function updateOneCarReview(titleOfUpdate, newScore) {
       );
 
     // Updates one car review score based on the title of the review
-    let updatedDocument = await carReviewCollection.updateOne(
+    let updatedDocument = await getCarReviewCollection().updateOne(
       { title: titleOfUpdate },
       { $set: { score: newScore } }
     );
@@ -129,7 +129,7 @@ async function deleteOneCarReview(titleToDelete) {
     if (validator.isEmpty(titleToDelete, { ignore_whitespace: true }))
       //Makes sure the title is not empty
       throw new InvalidInputError("Car review title must not be empty");
-    let carDelete = await carReviewCollection.deleteOne({
+    let carDelete = await getCarReviewCollection().deleteOne({
       title: titleToDelete,
     });
 
@@ -156,7 +156,7 @@ async function deleteOneCarReview(titleToDelete) {
  * @returns The car review collection
  */
 function getCollection() {
-  return carReviewCollection;
+  return getCarReviewCollection;
 }
 
 module.exports = {

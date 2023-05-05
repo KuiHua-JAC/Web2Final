@@ -18,15 +18,18 @@ async function initialize(dbName, url) {
     logger.info("Connected to MongoDb");
     db = client.db(dbName); // connects to the mongo database
 
-    carReviewCollection = createCollection("carReview");
-    userCollection = createCollection("users");
-    carCollection = createCollection("cars");
+    carReviewCollection = await createCollection("carReview");
+    userCollection = await createCollection("users");
+    carCollection = await createCollection("cars");
   } catch (e) {
     logger.error("Error while initializing database: " + e.message);
     throw new DatabaseError(`Error while initializing database: ${e.message}`);
   }
 }
 
+function getCarReviewCollection() {
+  return carReviewCollection;
+}
 async function createCollection(collectionName, resetFlag = false) {
   // Check to see if the pokemons collection exists
   collectionCursor = await db.listCollections({
@@ -64,8 +67,6 @@ async function close() {
 
 module.exports = {
   initialize,
-  carCollection,
-  userCollection,
-  carReviewCollection,
+  getCarReviewCollection,
   close,
 };
