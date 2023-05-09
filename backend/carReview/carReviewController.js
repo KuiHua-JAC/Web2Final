@@ -1,7 +1,6 @@
 // Kui Hua's code
 ////////////////////////////////
-
-const model = require("./carReview.model.js");
+const model = require("./carReviewModel.js");
 const express = require("express");
 const { DatabaseError } = require("../error/DatabaseError.js");
 const { InvalidInputError } = require("../error/InvalidInputError.js");

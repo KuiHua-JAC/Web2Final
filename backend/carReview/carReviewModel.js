@@ -67,7 +67,7 @@ async function getSingleCarReviewByScore(score) {
  * @throws {DatabaseError} if there is no cars in the database
  */
 async function getAllCarReviews() {
-  let carCollectionArray = await getCarReviewCollection.find().toArray();
+  let carCollectionArray = await getCarReviewCollection().find().toArray();
   if (carCollectionArray.length == 0)
     throw new DatabaseError("No car reviews were found");
   return carCollectionArray;
@@ -153,19 +153,10 @@ async function deleteOneCarReview(titleToDelete) {
   }
 }
 
-/**
- * Returns the collection connection so it can be used externally
- * @returns The car review collection
- */
-function getCollection() {
-  return getCarReviewCollection;
-}
-
 module.exports = {
   addCarReview,
   updateOneCarReview,
   getSingleCarReviewByScore,
   deleteOneCarReview,
   getAllCarReviews,
-  getCollection,
 };

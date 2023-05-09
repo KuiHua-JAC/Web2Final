@@ -1,25 +1,23 @@
 const express = require("express");
 const router = express.Router();
 const routeRoot = "/";
-const model = require("./carModelMongoDb.js");
+const model = require("./carModel.js");
 const logger = require("../logger.js");
 const { DatabaseError } = require("../error/DatabaseError.js");
 const { InvalidInputError } = require("../error/InvalidInputError.js");
 
+// TODO update all the documentation to make sure that every endpoint is handled properly
+// TODO maybe have a local database taht would contain all the makes of each cars, so that no random brand could be added?
 /**
 Handles HTTP GET requests to the '/new' endpoint to add a new car to the database.
 @param {Object} request - The HTTP request object.
 @param {Object} response - The HTTP response object.
 */
-router.post("/new", handleHttpNewRequest);
+router.post("/car", handleHttpNewRequest);
 async function handleHttpNewRequest(request, response) {
   try {
-    let newCar = {
-      make: request.query.Make,
-      model: request.query.Model,
-      year: request.query.Year,
-    };
-    await model.addCar(newCar.make, newCar.model, newCar.year);
+    const { make, model, year } = request.body;
+    let newCar = await model.addCar(make, model, year);
     response.status(200);
     response.send(newCar);
   } catch (err) {
@@ -49,13 +47,13 @@ Handles HTTP GET requests to the '/show' endpoint to find a single car in the da
 @param {Object} request - The HTTP request object.
 @param {Object} response - The HTTP response object.
 */
-router.get("/show", handleHttpShowRequest);
+router.get("/show/:make/:model/:year", handleHttpShowRequest);
 async function handleHttpShowRequest(request, response) {
   try {
     let foundCar = await model.getSingleCar(
-      request.params.Make,
-      request.params.Model,
-      request.params.Year
+      request.s.make,
+      request.params.model,
+      request.params.year
     );
     response.status(200);
     response.send(foundCar);
@@ -68,7 +66,7 @@ async function handleHttpShowRequest(request, response) {
       });
     } else if (err instanceof InvalidInputError) {
       response.status(400);
-      response.send("Getting a car failed." + err.message);
+      response.send({ errorMessage: "Getting a car failed." + err.message });
     } else {
       response.status(500);
       response.send({
@@ -116,13 +114,13 @@ Handles HTTP GET requests to the '/delete' endpoint to delete a single car from 
 @param {Object} request - The HTTP request object.
 @param {Object} response - The HTTP response object.
 */
-router.delete("/delete", handleHttpDeleteRequest);
+router.delete("/delete/:make/:model/:year", handleHttpDeleteRequest);
 async function handleHttpDeleteRequest(request, response) {
   try {
     let deleteCar = {
-      make: request.params.Make,
-      model: request.params.Model,
-      year: request.params.Year,
+      make: request.params.make,
+      model: request.params.model,
+      year: request.params.year,
     };
 
     if (await model.deleteSingleCar(deleteCar)) {
@@ -161,12 +159,12 @@ Handles HTTP GET requests to the '/updateMake' endpoint to update the make of a 
 @param {Object} request - The HTTP request object.
 @param {Object} response - The HTTP response object.
 */
-router.put("/updateMake", handleHttpUpdateMakeRequest);
+router.put("/updateMake/:make/:model/:year", handleHttpUpdateMakeRequest);
 async function handleHttpUpdateMakeRequest(request, response) {
   let updateCar = {
-    make: request.params.Make,
-    model: request.params.Model,
-    year: request.params.Year,
+    make: request.params.make,
+    model: request.params.model,
+    year: request.params.year,
   };
   const { newMake } = request.body;
   try {
@@ -208,7 +206,7 @@ Handles HTTP GET requests to the '/updateModel' endpoint to update the model of 
 @param {Object} request - The HTTP request object.
 @param {Object} response - The HTTP response object.
 */
-router.put("/updateModel", handleHttpUpdateModelRequest);
+router.put("/updateModel/:make/:model/:year", handleHttpUpdateModelRequest);
 async function handleHttpUpdateModelRequest(request, response) {
   let updateCar = {
     make: request.params.Make,
@@ -255,7 +253,7 @@ Handles HTTP GET requests to the '/updateYear' endpoint to update the year of a 
 @param {Object} request - The HTTP request object.
 @param {Object} response - The HTTP response object.
 */
-router.put("/updateYear", handleHttpUpdateYearRequest);
+router.put("/updateYear/:make/:model/:year", handleHttpUpdateYearRequest);
 async function handleHttpUpdateYearRequest(request, response) {
   let updateCar = {
     make: request.params.Make,

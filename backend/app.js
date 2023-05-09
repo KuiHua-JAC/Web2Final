@@ -10,7 +10,7 @@ const httpLogger = pinohttp({
 app.use(httpLogger);
 
 // Make sure errorController is last!
-const controllers = ["carReview", "error"];
+const controllers = ["carReview", "car", "error"];
 
 app.use(cors());
 app.use(express.json());
@@ -27,7 +27,7 @@ app.use(bodyParser.json());
 controllers.forEach((controllerName) => {
   try {
     const controllerRoutes = require(`./${controllerName}/` +
-      `${controllerName}.controller.js`);
+      `${controllerName}Controller.js`);
     app.use(controllerRoutes.routeRoot, controllerRoutes.router);
     1;
   } catch (error) {

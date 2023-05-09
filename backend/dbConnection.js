@@ -69,7 +69,6 @@ async function createCollection(collectionName, resetFlag = false) {
       collation: collation,
     });
   }
-
   return db.collection(collectionName); // Returns the collection to have convenient access to it
 }
 
