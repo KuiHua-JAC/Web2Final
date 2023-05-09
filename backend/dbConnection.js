@@ -30,6 +30,7 @@ async function initialize(dbName, url) {
 
 /**
  * Kui Hua's code
+ * Gets and returns the car review collection of DB
  *  */
 function getCarReviewCollection() {
   return carReviewCollection;
@@ -37,7 +38,18 @@ function getCarReviewCollection() {
 
 /**
  * Kui Hua's code
+ * Gets and returns the car collection of DB
  *  */
+function getCarReviewCollection() {
+  return carCollection;
+}
+
+/**
+ * Create a new collection of the name passed in if it doesn't already exist
+ * @param {string} collectionName Name of the collection to create or to get (if already created)
+ * @param {boolean} resetFlag True if the collection should be reset (for an existing db)
+ * @returns  the collection matching the collection name passed in
+ */
 async function createCollection(collectionName, resetFlag = false) {
   // Check to see if the pokemons collection exists
   collectionCursor = await db.listCollections({
