@@ -9,7 +9,7 @@ const { InvalidInputError } = require("../error/InvalidInputError.js");
 // TODO update all the documentation to make sure that every endpoint is handled properly
 // TODO maybe have a local database taht would contain all the makes of each cars, so that no random brand could be added?
 /**
-Handles HTTP GET requests to the '/new' endpoint to add a new car to the database.
+Handles HTTP POST requests to the '/car' endpoint to add a new car to the database.
 @param {Object} request - The HTTP request object.
 @param {Object} response - The HTTP response object.
 */
@@ -159,14 +159,14 @@ Handles HTTP GET requests to the '/updateMake' endpoint to update the make of a 
 @param {Object} request - The HTTP request object.
 @param {Object} response - The HTTP response object.
 */
-router.put("/updateMake/:make/:model/:year", handleHttpUpdateMakeRequest);
+router.put("/updateMake/:make/:model/:year/:newMake", handleHttpUpdateMakeRequest);
 async function handleHttpUpdateMakeRequest(request, response) {
   let updateCar = {
     make: request.params.make,
     model: request.params.model,
     year: request.params.year,
   };
-  const { newMake } = request.body; // TODO make this a rquest parameter
+ let  newMake  =  request.params.newMake; // TODO make this a rquest parameter
   try {
     if (await carModel.updateCarMake(updateCar, newMake)) {
       response.status(200);
