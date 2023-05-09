@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const routeRoot = "/";
-const model = require("./carModel.js");
+const carModel = require("./carModel.js");
 const logger = require("../logger.js");
 const { DatabaseError } = require("../error/DatabaseError.js");
 const { InvalidInputError } = require("../error/InvalidInputError.js");
@@ -17,7 +17,7 @@ router.post("/car", handleHttpNewRequest);
 async function handleHttpNewRequest(request, response) {
   try {
     const { make, model, year } = request.body;
-    let newCar = await model.addCar(make, model, year);
+    let newCar = await carModel.addCar(make, model, year);
     response.status(200);
     response.send(newCar);
   } catch (err) {
@@ -50,8 +50,8 @@ Handles HTTP GET requests to the '/show' endpoint to find a single car in the da
 router.get("/show/:make/:model/:year", handleHttpShowRequest);
 async function handleHttpShowRequest(request, response) {
   try {
-    let foundCar = await model.getSingleCar(
-      request.s.make,
+    let foundCar = await carModel.getSingleCar(
+      request.params.make,
       request.params.model,
       request.params.year
     );
@@ -84,7 +84,7 @@ Handles HTTP GET requests to the '/showAll' endpoint to find all cars in the dat
 router.get("/showAll", handleHttpShowAllRequest);
 async function handleHttpShowAllRequest(request, response) {
   try {
-    let carArray = await model.getAllCars();
+    let carArray = await carModel.getAllCars();
     response.status(200);
     response.send(carArray);
   } catch (err) {
@@ -123,7 +123,7 @@ async function handleHttpDeleteRequest(request, response) {
       year: request.params.year,
     };
 
-    if (await model.deleteSingleCar(deleteCar)) {
+    if (await carModel.deleteSingleCar(deleteCar)) {
       response.status(200);
       response.send({ message: "The car has been successfully deleted" });
     } else {
@@ -166,9 +166,9 @@ async function handleHttpUpdateMakeRequest(request, response) {
     model: request.params.model,
     year: request.params.year,
   };
-  const { newMake } = request.body;
+  const { newMake } = request.body; // TODO make this a rquest parameter
   try {
-    if (await model.updateCarMake(updateCar, newMake)) {
+    if (await carModel.updateCarMake(updateCar, newMake)) {
       response.status(200);
       response.send({
         message: "The car's make has been successfully updated",
@@ -215,7 +215,7 @@ async function handleHttpUpdateModelRequest(request, response) {
   };
   const { newModel } = request.body;
   try {
-    if (await model.updateCarModel(updateCar, newModel)) {
+    if (await carModel.updateCarModel(updateCar, newModel)) {
       response.status(200);
       response.send({
         message: "The car's model has been successfully updated",
@@ -262,7 +262,7 @@ async function handleHttpUpdateYearRequest(request, response) {
   };
   const { newYear } = request.body;
   try {
-    if (await model.updateCarYear(updateCar, newYear)) {
+    if (await carModel.updateCarYear(updateCar, newYear)) {
       response.status(200);
       response.send({
         message: "The car's year has been successfully updated",

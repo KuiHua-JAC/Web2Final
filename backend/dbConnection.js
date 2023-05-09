@@ -40,7 +40,7 @@ function getCarReviewCollection() {
  * Kui Hua's code
  * Gets and returns the car collection of DB
  *  */
-function getCarReviewCollection() {
+function getCarCollection() {
   return carCollection;
 }
 
@@ -87,5 +87,6 @@ async function close() {
 module.exports = {
   initialize,
   getCarReviewCollection,
+  getCarCollection,
   close,
 };

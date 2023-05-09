@@ -5,6 +5,7 @@ const validateUtils = require("./validateUtils.js");
 const validator = require("validator");
 const logger = require("../logger.js");
 
+// TODO instead of returning true,  return a object with a message that would say that wtv operation you are doing is succesful
 /**
 Inserts a new car document into the database.
 @param {string} make - The make of the car.
@@ -21,7 +22,7 @@ async function addCar(make, model, year) {
 
   try {
     const car = { make: make, model: model, year: year };
-    const result = await carsCollection.insertOne(car);
+    const result = await getCarCollection().insertOne(car);
   } catch (err) {
     console.log(err.message);
     throw new DatabaseError("Error adding car");
