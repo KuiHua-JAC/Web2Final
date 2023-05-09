@@ -1,6 +1,6 @@
 const dbName = "Car_db";
 const { MongoClient } = require("mongodb");
-const validateUtils = require("./models/validateUtils");
+const validateUtils = require("./validateUtils");
 const { DatabaseError } = require("./models/databaseError");
 const logger = require("pino")();
 

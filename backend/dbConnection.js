@@ -6,6 +6,7 @@ var db;
 var carReviewCollection, userCollection, carCollection;
 var client;
 /**
+ * Kui Hua's code
  * Initializes a database if not already existing then connects to it. Depending on the reset flag, the existing collection will either be used or dropped and recreated.
  * @param {string} dbName The name of the database to connect to/initialize if not already existing
  * @param {string} url The address of the database to connect to
@@ -27,9 +28,16 @@ async function initialize(dbName, url) {
   }
 }
 
+/**
+ * Kui Hua's code
+ *  */
 function getCarReviewCollection() {
   return carReviewCollection;
 }
+
+/**
+ * Kui Hua's code
+ *  */
 async function createCollection(collectionName, resetFlag = false) {
   // Check to see if the pokemons collection exists
   collectionCursor = await db.listCollections({

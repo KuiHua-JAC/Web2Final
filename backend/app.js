@@ -21,6 +21,9 @@ app.use(bodyParser.json());
 // Register routes from all controllers
 //  (Assumes a flat directory structure and common
 // 'routeRoot' / 'router' export)
+/**
+ * Kui Hua's code
+ *  */
 controllers.forEach((controllerName) => {
   try {
     const controllerRoutes = require(`./${controllerName}/` +
