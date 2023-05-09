@@ -5,7 +5,6 @@ const validateUtils = require("./validateUtils.js");
 const validator = require("validator");
 const logger = require("../logger.js");
 
-// TODO instead of returning true,  return a object with a message that would say that wtv operation you are doing is succesful
 /**
 Inserts a new car document into the database.
 @param {string} make - The make of the car.
@@ -15,6 +14,7 @@ Inserts a new car document into the database.
 @throws {DatabaseError} If there is an error adding the car document.
 */
 
+// TODO check with car review model to see if the returns are the same, and update documentation accordingly
 async function addCar(make, model, year) {
   if (!validateUtils.isValidCar(make, model, year)) {
     throw new Error("Invalid car");
