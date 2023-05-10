@@ -1,6 +1,13 @@
 import NavButton from "./NavButton";
 import { useNavigate } from "react-router-dom";
 import $ from "jquery";
+
+$(window).resize(function () {
+  // Get the current window width
+  var windowWidth = $(window).width();
+  if (windowWidth > 768) $("#navbar-default").show();
+  else $("#navbar-default").hide();
+});
 // This code's style was taken from flowbite, however the logic is from me
 /**
  * Navbar that is used to navigate through the different routes
