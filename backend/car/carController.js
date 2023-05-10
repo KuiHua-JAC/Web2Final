@@ -6,6 +6,7 @@ const logger = require("../logger.js");
 const { DatabaseError } = require("../error/DatabaseError.js");
 const { InvalidInputError } = require("../error/InvalidInputError.js");
 
+//TODO just like how my endpoint is reviews, make yours consistent such as cars
 // TODO update all the documentation to make sure that every endpoint is handled properly
 // TODO maybe have a local database taht would contain all the makes of each cars, so that no random brand could be added?
 /**

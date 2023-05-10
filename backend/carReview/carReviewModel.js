@@ -63,10 +63,11 @@ async function addCarReview(userName, title, description, score, car, type) {
 }
 
 /**
- * Gets one car review that matches the given score
- * @param {int} score is the score review of the car
- * @returns the car document (which can be used as an object to access the fields)
- * @throws {DatabaseError,InvalidInputError} if the document could not be found or if the score given is out of range
+ * Gets one car review that matches the given score.
+ * @param {number} score - The score of the car review.
+ * @returns {object} - The car review document (which can be used as an object to access the fields).
+ * @throws {InvalidInputError} - If the score given is out of range.
+ * @throws {DatabaseError} - If the document could not be found.
  */
 async function getSingleCarReview(title) {
   try {
@@ -82,11 +83,11 @@ async function getSingleCarReview(title) {
     logger.warn("Error while trying to get a car review" + e.message);
     if (e instanceof InvalidInputError)
       throw new InvalidInputError(
-        `Invalid input for getting a car with score ${score}: ${e.message}`
+        `Invalid input for getting a car with title ${title}: ${e.message}`
       );
     if (e instanceof DatabaseError)
       throw new DatabaseError(
-        `Database error while getting a car with score ${score}: ${e.message}`
+        `Database error while getting a car with title ${title}: ${e.message}`
       );
     else throw e;
   }
@@ -105,28 +106,45 @@ async function getAllCarReviews() {
 }
 
 /**
- * Updates the first matched car review in the database with a new score
- * @param {string} titleOfUpdate is the title of the car review to update
- * @param {string} newScore is the new score of the car review
- * @returns {boolean} true if the update was successful
+ * Updates the first matched car review in the database with new properties.
+ * @param {string} titleOfUpdate - The title of the car review to update.
+ * @param {number} newScore - The new score of the car review.
+ * @param {string} newDescription - The new description of the car review.
+ * @param {string} newTitle - The new title of the car review.
+ * @returns {boolean} - True if the update was successful.
  * @throws {DatabaseError,InvalidInputError} if the update was not successful or if the input was invalid
  */
-async function updateOneCarReview(titleOfUpdate, newScore) {
+async function updateOneCarReview(
+  titleOfUpdate,
+  newScore,
+  newDescription,
+  newTitle
+) {
   try {
     if (validator.isEmpty(titleOfUpdate, { ignore_whitespace: true }))
       //Makes sure the title is not empty
       throw new InvalidInputError("Car review title must not be empty");
 
-    //Makes sure the score is within the limits
-    if (newScore < MIN_SCORE || newScore > MAX_SCORE)
+    validateUtils.isValid(
+      newTitle,
+      newDescription,
+      newScore,
+      MIN_SCORE,
+      MAX_SCORE
+    );
+
+    // Makes sure there is no duplicate title in the database already
+    if (await getCarReviewCollection().findOne({ title: title }))
       throw new InvalidInputError(
-        `A valid number between ${MIN_SCORE} and ${MAX_SCORE} must be used for a score `
+        "Cannot edit post title: Title already in the database"
       );
 
     // Updates one car review score based on the title of the review
     let updatedDocument = await getCarReviewCollection().updateOne(
       { title: titleOfUpdate },
-      { $set: { score: newScore } }
+      {
+        $set: { score: newScore, title: newTitle, description: newDescription },
+      }
     );
 
     // Checks if there is a car that has been updated. Throws an error if it didn't
@@ -187,7 +205,7 @@ async function deleteOneCarReview(titleToDelete) {
 module.exports = {
   addCarReview,
   updateOneCarReview,
-  getSingleCarReviewByScore,
+  getSingleCarReview,
   deleteOneCarReview,
   getAllCarReviews,
 };

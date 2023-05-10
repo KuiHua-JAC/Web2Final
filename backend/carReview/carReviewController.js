@@ -58,11 +58,11 @@ router.post("/reviews", async (request, response) => {
  * @param {object} request: Expect a post request expecting a parameter of: score
  * @param {object} response" Send 200 on successful read, 400 on input error and 500 on database related error
  */
-router.get("/reviews/:score", async (request, response) => {
-  let score = request.params.score;
+router.get("/reviews/:title", async (request, response) => {
+  let title = request.params.title;
 
   try {
-    let carReview = await model.getSingleCarReviewByScore(score);
+    let carReview = await model.getSingleCarReview(title);
     response.status(200);
 
     // Sends a successful read with the car review found for the given score
@@ -132,9 +132,9 @@ router.put("/reviews/:title", async (request, response) => {
   const title = request.params.title;
 
   // Takes the score in the request body JSON
-  const { score } = request.body;
+  const { newTitle, score, description } = request.body;
   try {
-    if (await model.updateOneCarReview(title, score)) {
+    if (await model.updateOneCarReview(title, score, description, newTitle)) {
       response.status(200);
       response.send({ message: "Car review updated successfully" });
     }
