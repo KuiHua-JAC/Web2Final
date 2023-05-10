@@ -130,7 +130,7 @@ async function getAllUsers() {
  */
 async function deleteSingleUser(username) {
   try {
-    const result = await getUserCollection().deleteOne({ userName: username });
+    const result = await getUserCollection().deleteOne({ username: username });
 
     if (result.deletedCount === 0) {
       throw new Error("No user found with the given username");
