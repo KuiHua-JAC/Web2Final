@@ -10,7 +10,7 @@ const httpLogger = pinohttp({
 app.use(httpLogger);
 
 // Make sure errorController is last!
-const controllers = ["carReview", "car", "user", "error"];
+const controllers = ["carReview", "user", "error"]; //TODO put "car", back
 
 app.use(cors());
 app.use(express.json());
