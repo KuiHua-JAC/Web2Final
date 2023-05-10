@@ -56,10 +56,12 @@ Handles HTTP GET requests to the '/show' endpoint to find a single user in the d
 @param {Object} request - The HTTP request object.
 @param {Object} response - The HTTP response object.
 */
-router.get("/show/:username", handleHttpShowRequest);
+router.get("/user/:username", handleHttpShowRequest);
 async function handleHttpShowRequest(request, response) {
   try {
-    let foundUser = await userModel.getSingleUser(request.params.username);
+    let foundUser = await userModel.getSingleUserByUsername(
+      request.params.username
+    );
     response.status(200);
     response.send(foundUser);
   } catch (err) {

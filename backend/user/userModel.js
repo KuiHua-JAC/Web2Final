@@ -92,7 +92,7 @@ async function getSingleUserByEmail(email) {
  */
 async function getSingleUserByUsername(username) {
   try {
-    let user = await userCollection.findOne({ username: username });
+    let user = await getUserCollection().findOne({ username: username });
 
     if (!user) {
       throw new Error("No user found");
@@ -154,14 +154,14 @@ async function updateUserame(oldUsername, newusername) {
   validateUtils.isValidUsername(newUsername); //will throw if username is invalid
 
   //Valid username, but we dont want duplicate. Check if already in database
-  if (!((await userCollection.findOne({ username: newUsername })) == null))
+  if (!((await getUserCollection().findOne({ username: newUsername })) == null))
     throw new InvalidInputError(
       "The user " + newUsername + " is already in the database"
     );
 
   try {
     // Update the user's username
-    const result = await userCollection.updateOne(
+    const result = await getUserCollection().updateOne(
       { username: oldUsername },
       { $set: { username: newUsername } }
     );
@@ -188,7 +188,7 @@ async function updateUserEmail(username, email) {
   validateUtils.isValidEmail(email);
   try {
     // Update the user's username
-    const result = await userCollection.updateOne(
+    const result = await getUserCollection().updateOne(
       { username: username },
       { $set: { email: email } }
     );
@@ -216,7 +216,7 @@ async function updateUserPassword(username, password) {
 
   try {
     // Update the user's username
-    const result = await userCollection.updateOne(
+    const result = await getUserCollection().updateOne(
       { username: username },
       { $set: { password: password } }
     );
