@@ -207,6 +207,8 @@ async function handleHttpUpdateMakeRequest(request, response) {
   }
 }
 
+// TODO make ur params lowercase since ":make/:year/:newModel" are all lowercase, the request.params.xyz has to
+// follow the same format.
 /**
 Handles HTTP GET requests to the '/updateModel' endpoint to update the model of a single car in the database.
 @param {Object} request - The HTTP request object.
