@@ -17,14 +17,14 @@ Handles HTTP POST requests to the '/user' endpoint to add a new user to the data
 router.post("/user", handleHttpNewRequest);
 async function handleHttpNewRequest(request, response) {
   try {
-    const { email, password, firstName, lastName, userName, isAdmin } =
+    const { email, password, firstName, lastName, username, isAdmin } =
       request.body;
     let newUser = await userModel.addUser(
       email,
       password,
       firstName,
       lastName,
-      userName,
+      username,
       isAdmin
     );
     response.status(200);
@@ -88,7 +88,7 @@ Handles HTTP GET requests to the '/showAll' endpoint to find all users in the da
 @param {Object} request - The HTTP request object.
 @param {Object} response - The HTTP response object.
 */
-router.get("/showAll", handleHttpShowAllRequest);
+router.get("/user", handleHttpShowAllRequest);
 async function handleHttpShowAllRequest(request, response) {
   try {
     let userArray = await userModel.getAllUsers();

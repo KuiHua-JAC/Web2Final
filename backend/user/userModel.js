@@ -7,6 +7,8 @@ const validateUtils = require("./validateUtils.js");
 const validator = require("validator");
 const logger = require("../logger.js");
 
+//TODO unique email, isAdmin boolean not string
+//TODO isAdmin musts be bool not string
 /**
  * Adds a new document to the collection, which is a user that contains an email, password, first name, last name, username and isAdmin.
  * @param {string} email is the email of the user
