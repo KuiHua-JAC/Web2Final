@@ -19,12 +19,29 @@ const logger = require("../logger.js");
  * @throws {DatabaseError,InvalidInputError} if the document could not be added or if the input is invalid
  * @throws {InvalidInputError} if there is an invalid input
  */
-async function addUser(email, password, firstName, lastName, username, isAdmin) {
-  validateUtils.isValid(email, password, firstName, lastName, username, isAdmin)  //no need to throw errors here as the method is already throwing errors if there is bad input
+async function addUser(
+  email,
+  password,
+  firstName,
+  lastName,
+  username,
+  isAdmin
+) {
+  validateUtils.isValid(
+    email,
+    password,
+    firstName,
+    lastName,
+    username,
+    isAdmin
+  ); //no need to throw errors here as the method is already throwing errors if there is bad input
 
-  //Valid username, but we dont want duplicate. Check if already in database. 
+  //Valid username, but we dont want duplicate. Check if already in database.
   //Cannot check in the validateUtils.js file as this require a database connection
-  if (!(await userCollection.findOne({ username: username }) == null)) throw new InvalidInputError("The user " + username + " is already in the database");
+  if (!((await getUserCollection().findOne({ username: username })) == null))
+    throw new InvalidInputError(
+      "The user " + username + " is already in the database"
+    );
 
   const newUser = {
     email: email,
@@ -32,15 +49,18 @@ async function addUser(email, password, firstName, lastName, username, isAdmin) 
     firstname: firstName,
     lastname: lastName,
     username: username,
-    isadmin: isAdmin
+    isadmin: isAdmin,
   };
 
   try {
-    await userCollection.insertOne(newUser)
+    await getUserCollection().insertOne(newUser);
 
     return newUser;
   } catch (error) {
-    throw new DatabaseError("There was an error while inserting the data in the database: " + error.message);
+    throw new DatabaseError(
+      "There was an error while inserting the data in the database: " +
+        error.message
+    );
   }
 }
 
@@ -66,7 +86,7 @@ async function getSingleUserByEmail(email) {
 
 /**
  * Gets the info of a given user
- * 
+ *
  * @param {string} username username of the user to get the info of
  * @returns the user object
  */
@@ -134,7 +154,10 @@ async function updateUserame(oldUsername, newusername) {
   validateUtils.isValidUsername(newUsername); //will throw if username is invalid
 
   //Valid username, but we dont want duplicate. Check if already in database
-  if (!(await userCollection.findOne({ username: newUsername }) == null)) throw new InvalidInputError("The user " + newUsername + " is already in the database");
+  if (!((await userCollection.findOne({ username: newUsername })) == null))
+    throw new InvalidInputError(
+      "The user " + newUsername + " is already in the database"
+    );
 
   try {
     // Update the user's username
@@ -143,17 +166,17 @@ async function updateUserame(oldUsername, newusername) {
       { $set: { username: newUsername } }
     );
     if (result.modifiedCount === 0) {
-      throw new InvalidInputError("User not found or username is the same as the current one");
+      throw new InvalidInputError(
+        "User not found or username is the same as the current one"
+      );
     }
 
     return result.modifiedCount;
-  }
-  catch (err) {
+  } catch (err) {
     logger.fatal(err.message);
     throw new DatabaseError("Error updating the user");
   }
 }
-
 
 /**
  * Updates the email of a single user in the database.
@@ -162,7 +185,7 @@ async function updateUserame(oldUsername, newusername) {
  * @throws {DatabaseError} - If an error occurs while updating the user in the database.
  */
 async function updateUserEmail(username, email) {
-  validateUtils.isValidEmail(email)
+  validateUtils.isValidEmail(email);
   try {
     // Update the user's username
     const result = await userCollection.updateOne(
@@ -170,7 +193,9 @@ async function updateUserEmail(username, email) {
       { $set: { email: email } }
     );
     if (result.modifiedCount === 0) {
-      throw new InvalidInputError("User not found or username is the same as the current one");
+      throw new InvalidInputError(
+        "User not found or username is the same as the current one"
+      );
     }
 
     return result.modifiedCount;
@@ -211,5 +236,5 @@ module.exports = {
   getSingleUserByUsername,
   updateUserEmail,
   updateUserPassword,
-  updateUserame
+  updateUserame,
 };
