@@ -5,6 +5,9 @@ const validateUtils = require("./validateUtils.js");
 const validator = require("validator");
 const logger = require("../logger.js");
 
+//TODO makes sure that there is no car that has the same model/make/year. You can do so by finding a car first with that information, then
+// if there is one, throw an error. For reference, look at my AddCarReview in my model. Same thing for update, make sure there's only one instance of
+// the car.
 /**
 Inserts a new car document into the database.
 @param {string} make - The make of the car.
@@ -83,6 +86,9 @@ async function deleteSingleCar(car) {
   }
 }
 
+// TODO for update, you can combine all three together, look at my update for example.
+// In the frontend, when a "car" is being updated, the form will fill up with the old values first
+// so as long they dnt change the fields it's fine.
 /**
 Updates the make of a single car in the database.
 @param {Object} car - The car to be updated in the database.
