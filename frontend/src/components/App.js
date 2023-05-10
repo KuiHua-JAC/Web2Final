@@ -12,6 +12,8 @@ export default function App() {
       <Route path="/" element={<MainLayout />}>
         <Route index element={<Home />} />
         <Route path="/profile" element={<Profile />} />
+        {/* TODO the homepage should be about recent posts or look at inspiration online */}
+        {/* add a review "tab" where you can search for reviews  */}
         <Route path="/cars" element={<Cars />} />
         <Route path="/about" element={<About />} />
         <Route path="/usererror" element={<UserError />} />
