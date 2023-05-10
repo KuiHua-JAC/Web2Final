@@ -28,6 +28,10 @@ async function initialize(dbName, url) {
   }
 }
 
+function getUserCollection() {
+  return userCollection;
+}
+
 /**
  * Kui Hua's code
  * Gets and returns the car review collection of DB
@@ -88,5 +92,6 @@ module.exports = {
   initialize,
   getCarReviewCollection,
   getCarCollection,
+  getUserCollection,
   close,
 };

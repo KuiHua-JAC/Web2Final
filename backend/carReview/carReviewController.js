@@ -16,9 +16,16 @@ const logger = require("../logger.js");
  */
 router.post("/reviews", async (request, response) => {
   // Takes the title,description,score in the request body JSON
-  const { title, description, score } = request.body;
+  const { title, description, score, username, type, car } = request.body;
   try {
-    let carReview = await model.addCarReview(title, description, score);
+    let carReview = await model.addCarReview(
+      username,
+      title,
+      description,
+      score,
+      car,
+      type
+    );
     response.status(200);
 
     // Sends a response to confirm that the car review has been added
