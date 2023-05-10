@@ -34,17 +34,17 @@ async function addCarReview(userName, title, description, score, car, type) {
       "Cannot add post: Title already in the database"
     );
 
-  if (await !getUserCollection().findOne({ username: userName }))
+  if (!(await getUserCollection().findOne({ username: userName })))
     // Make sure the user exists in the database
     throw new DatabaseError("Cannot post a review without being a valid user");
 
   // Make sure the car exists in the database
   if (
-    await !getCarCollection().findOne({
+    !(await getCarCollection().findOne({
       make: car.make,
       model: car.model,
       year: car.year,
-    })
+    }))
   )
     throw new DatabaseError("Cannot post a review of a non-existing car");
 
@@ -59,7 +59,14 @@ async function addCarReview(userName, title, description, score, car, type) {
 
   if (!carToAdd)
     throw new DatabaseError("Database error: Could not add the car review");
-  return { title: title, description: description, score: score };
+  return {
+    title: title,
+    description: description,
+    score: score,
+    username: userName,
+    car: car,
+    type: type,
+  };
 }
 
 /**
@@ -134,7 +141,7 @@ async function updateOneCarReview(
     );
 
     // Makes sure there is no duplicate title in the database already
-    if (await getCarReviewCollection().findOne({ title: title }))
+    if (!(await getCarReviewCollection().findOne({ title: title })))
       throw new InvalidInputError(
         "Cannot edit post title: Title already in the database"
       );
