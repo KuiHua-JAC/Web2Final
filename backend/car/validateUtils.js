@@ -11,12 +11,15 @@ Checks if the given car object is valid by checking its make, model, and year.
 @returns {boolean} - Returns true if the car is valid, false otherwise.
 */
 function isValidCar(make, model, year){
-    if(!isValidMake(make) || !isValidModel(model) || !isValidYear(year)){
-        return false;
-    }
-else{
-    return true;
-}
+  if (!isValidMake(make)) {
+    throw new Error("Invalid make");
+  }
+  if (!isValidModel(model)) {
+    throw new Error("Invalid model");
+  }
+  if (!isValidYear(year)) {
+    throw new Error("Invalid year");
+  }
 }
 
 /**

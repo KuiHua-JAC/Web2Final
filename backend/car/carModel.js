@@ -16,10 +16,7 @@ Inserts a new car document into the database.
 
 // TODO check with car review model to see if the returns are the same, and update documentation accordingly
 async function addCar(make, model, year) {
-  if (!validateUtils.isValidCar(make, model, year)) {
-    throw new Error("Invalid car");
-  }
-
+  validateUtils.isValidCar(make, model, year)
   try {
     const car = { make: make, model: model, year: year };
     const result = await getCarCollection().insertOne(car);
