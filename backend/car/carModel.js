@@ -14,12 +14,9 @@ Inserts a new car document into the database.
 @throws {DatabaseError} If there is an error adding the car document.
 */
 
-// TODO check with car review model to see if the returns are the same, and update documentation accordingly
+// TODO check with car review model to see if the returns are the same, and update documentation accordingly (base ur code off of Kui Hua's)
 async function addCar(make, model, year) {
-  if (!validateUtils.isValidCar(make, model, year)) {
-    throw new Error("Invalid car");
-  }
-
+  validateUtils.isValidCar(make, model, year);
   try {
     const car = { make: make, model: model, year: year };
     const result = await getCarCollection().insertOne(car);
@@ -76,7 +73,6 @@ Deletes a single car from the database.
 @param {Object} car - The car to be deleted from the database.
 @throws {DatabaseError} - If an error occurs while deleting the car from the database.
 */
-
 async function deleteSingleCar(car) {
   try {
     const query = { make: car.make };
@@ -93,19 +89,40 @@ Updates the make of a single car in the database.
 @param {string} make - The new make of the car.
 @throws {DatabaseError} - If an error occurs while updating the car in the database.
 */
-
 async function updateCarMake(car, make) {
   try {
     if (validateUtils.isValidMake(make)) {
-      await getCarCollection().updateOne(car, { $set: { make: make } });
+      let updatedCar = await getCarCollection().updateOne(car, {
+        $set: { make: make },
+      });
+      if (updatedCar.matchedCount == 0)
+        throw new DatabaseError(
+          `Updating the model of ${(car.make, car.model, car.year)} failed.`
+        );
       return true;
     } else {
       console.log("Make is invalid");
       return false;
     }
-  } catch (err) {
-    logger.fatal(err.message);
-    throw new DatabaseError("Error updating the car");
+  } catch (e) {
+    logger.warn(
+      `Error while trying to update a car make of ${
+        (car.make, car.model, car.year)
+      }` + e.message
+    );
+    if (e instanceof InvalidInputError)
+      throw new InvalidInputError(
+        `Invalid input for updating the car make of ${
+          (car.make, car.model, car.year)
+        }: ${e.message}`
+      );
+    if (e instanceof DatabaseError)
+      throw new DatabaseError(
+        `Database error while updating the car make of ${
+          (car.make, car.model, car.year)
+        }: ${e.message}`
+      );
+    else throw e;
   }
 }
 
@@ -119,15 +136,37 @@ Updates the model of a single car in the database.
 async function updateCarModel(car, model) {
   try {
     if (validateUtils.isValidModel(model)) {
-      await getCarCollection().updateOne(car, { $set: { model: model } });
+      let updatedCar = await getCarCollection().updateOne(car, {
+        $set: { model: model },
+      });
+      if (updatedCar.matchedCount == 0)
+        throw new DatabaseError(
+          `Updating the model of ${(car.make, car.model, car.year)} failed.`
+        );
       return true;
     } else {
       console.log("Model is invalid");
       return false;
     }
-  } catch (err) {
-    logger.fatal(err.message);
-    throw new DatabaseError("Error updating the car");
+  } catch (e) {
+    logger.warn(
+      `Error while trying to update a car model of ${
+        (car.make, car.model, car.year)
+      }` + e.message
+    );
+    if (e instanceof InvalidInputError)
+      throw new InvalidInputError(
+        `Invalid input for updating the car model of ${
+          (car.make, car.model, car.year)
+        }: ${e.message}`
+      );
+    if (e instanceof DatabaseError)
+      throw new DatabaseError(
+        `Database error while updating the car model of ${
+          (car.make, car.model, car.year)
+        }: ${e.message}`
+      );
+    else throw e;
   }
 }
 
@@ -141,14 +180,36 @@ Updates the year of a single car in the database.
 async function updateCarYear(car, year) {
   try {
     if (validateUtils.isValidYear(year)) {
-      await getCarCollection().updateOne(car, { $set: { year: year } });
+      let updatedCar = await getCarCollection().updateOne(car, {
+        $set: { year: year },
+      });
+      if (updatedCar.matchedCount == 0)
+        throw new DatabaseError(
+          `Updating the year of ${(car.make, car.model, car.year)} failed.`
+        );
       return true;
     } else {
       console.log("The year is invalid");
     }
-  } catch (err) {
-    logger.fatal(err.message);
-    throw new DatabaseError("Error updating the car");
+  } catch (e) {
+    logger.warn(
+      `Error while trying to update a car year of ${
+        (car.make, car.model, car.year)
+      }` + e.message
+    );
+    if (e instanceof InvalidInputError)
+      throw new InvalidInputError(
+        `Invalid input for updating the car year of ${
+          (car.make, car.model, car.year)
+        }: ${e.message}`
+      );
+    if (e instanceof DatabaseError)
+      throw new DatabaseError(
+        `Database error while updating the car year of ${
+          (car.make, car.model, car.year)
+        }: ${e.message}`
+      );
+    else throw e;
   }
 }
 

@@ -1,6 +1,10 @@
 // Kui Hua's code
 ////////////////////////////////
-const { getCarReviewCollection } = require("../dbConnection.js");
+const {
+  getCarReviewCollection,
+  getCarCollection,
+  getUserCollection,
+} = require("../dbConnection.js");
 const { DatabaseError } = require("../error/DatabaseError.js");
 const { InvalidInputError } = require("../error/InvalidInputError.js");
 const validateUtils = require("./validateUtils.js");
@@ -10,19 +14,47 @@ const MIN_SCORE = 0,
   MAX_SCORE = 5;
 
 /**
- * Adds a new document to the collection, which is a car review that contains a title, description and score.
+ * Adds a new document to the collection, which is a car review that contains a title, description and score. A car and a username is associated with it, to make
+ * sure that a valid user is posting the post, and about a relevent car.
+ * @param {string} userName is the name of the user that is posting the post.
  * @param {string} title is the title of the review (car model being reviewed)
  * @param {string} description is the review of the car
+ * @param {object} car is the object representation of the car getting reviewed.
+ * @param {string} type is the type of car post being added
  * @param {int} score represents the score of the car being reviewed
  * @return the review object if successful, otherwise
- * @throws {DatabaseError,InvalidInputError} if the document could not be added or if the input is invalid
+ * @throws {DatabaseError,InvalidInputError} if the document could not be added or if the input is invalid (duplicate title or non existing car/type)
  */
-async function addCarReview(title, description, score) {
+async function addCarReview(userName, title, description, score, car, type) {
   validateUtils.isValid(title, description, score, MIN_SCORE, MAX_SCORE);
+
+  // Makes sure there is no duplicate title in the database already
+  if (await getCarReviewCollection().findOne({ title: title }))
+    throw new InvalidInputError(
+      "Cannot add post: Title already in the database"
+    );
+
+  if (await !getUserCollection().findOne({ username: userName }))
+    // Make sure the user exists in the database
+    throw new DatabaseError("Cannot post a review without being a valid user");
+
+  // Make sure the car exists in the database
+  if (
+    await !getCarCollection().findOne({
+      make: car.make,
+      model: car.model,
+      year: car.year,
+    })
+  )
+    throw new DatabaseError("Cannot post a review of a non-existing car");
+
   let carToAdd = getCarReviewCollection().insertOne({
     title: title,
     description: description,
     score: score,
+    username: userName,
+    car: car,
+    type: type,
   });
 
   if (!carToAdd)
@@ -36,14 +68,13 @@ async function addCarReview(title, description, score) {
  * @returns the car document (which can be used as an object to access the fields)
  * @throws {DatabaseError,InvalidInputError} if the document could not be found or if the score given is out of range
  */
-async function getSingleCarReviewByScore(score) {
+async function getSingleCarReview(title) {
   try {
-    if (score < MIN_SCORE || score > MAX_SCORE)
-      throw new InvalidInputError(
-        `Score must be between ${MIN_SCORE} and ${MAX_SCORE}`
-      );
+    if (validator.isEmpty(titleOfUpdate, { ignore_whitespace: true }))
+      //Makes sure the title is not empty
+      throw new InvalidInputError("Car review title must not be empty");
 
-    let carDocument = await getCarReviewCollection().findOne({ score: score });
+    let carDocument = await getCarReviewCollection().findOne({ title: title });
     if (!carDocument) throw new DatabaseError("Could not find the car review");
 
     return carDocument;
