@@ -206,14 +206,14 @@ Handles HTTP GET requests to the '/updateModel' endpoint to update the model of 
 @param {Object} request - The HTTP request object.
 @param {Object} response - The HTTP response object.
 */
-router.put("/updateModel/:make/:model/:year", handleHttpUpdateModelRequest);
+router.put("/updateModel/:make/:model/:year/:newModel", handleHttpUpdateModelRequest);
 async function handleHttpUpdateModelRequest(request, response) {
   let updateCar = {
     make: request.params.Make,
     model: request.params.Model,
     year: request.params.Year,
   };
-  const { newModel } = request.body;
+  let  newModel  =  request.params.newModel;
   try {
     if (await carModel.updateCarModel(updateCar, newModel)) {
       response.status(200);
