@@ -1,6 +1,7 @@
 import NavButton from "./NavButton";
 import { useNavigate } from "react-router-dom";
 import $ from "jquery";
+import { useLocation } from "react-router-dom";
 
 $(window).resize(function () {
   // Get the current window width
@@ -15,6 +16,7 @@ $(window).resize(function () {
  */
 export default function Navbar() {
   const navigate = useNavigate();
+  const { state } = useLocation(); //TODO keep track of the signin state
   return (
     <nav className="border-gray-200 bg-black">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
@@ -53,12 +55,16 @@ export default function Navbar() {
             ></path>
           </svg>
         </button>
-        <div className="hidden w-full md:block md:w-auto" id="navbar-default">
+        <div
+          className="hidden max-h-4 w-full md:block md:w-7/12"
+          id="navbar-default"
+        >
           <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:flex-row md:space-x-8 md:mt-0 md:border-0 bg-black md:dark:bg-black dark:border-gray-700">
             <NavButton to="/" label="Home" />
-            <NavButton to="/cars" label="Cars" />
+            <NavButton to="/reviews" label="Reviews" />
             <NavButton to="/profile" label="Profile" />
-            <NavButton to="/about" label="About" />
+            <NavButton to="/cars" label="Cars" />
+            <NavButton to="/signin" label="Sign in" />
           </ul>
         </div>
       </div>
