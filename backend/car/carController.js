@@ -14,7 +14,7 @@ Handles HTTP POST requests to the '/car' endpoint to add a new car to the databa
 @param {Object} request - The HTTP request object.
 @param {Object} response - The HTTP response object.
 */
-router.post("/car", handleHttpNewRequest);
+router.post("/cars", handleHttpNewRequest);
 async function handleHttpNewRequest(request, response) {
   try {
     const { make, model, year } = request.body;
@@ -48,7 +48,7 @@ Handles HTTP GET requests to the '/show' endpoint to find a single car in the da
 @param {Object} request - The HTTP request object.
 @param {Object} response - The HTTP response object.
 */
-router.get("/show/:make/:model/:year", handleHttpShowRequest);
+router.get("/cars/:make/:model/:year", handleHttpShowRequest);
 async function handleHttpShowRequest(request, response) {
   try {
     let foundCar = await carModel.getSingleCar(
@@ -82,7 +82,7 @@ Handles HTTP GET requests to the '/showAll' endpoint to find all cars in the dat
 @param {Object} request - The HTTP request object.
 @param {Object} response - The HTTP response object.
 */
-router.get("/showAll", handleHttpShowAllRequest);
+router.get("/cars", handleHttpShowAllRequest);
 async function handleHttpShowAllRequest(request, response) {
   try {
     let carArray = await carModel.getAllCars();
@@ -115,7 +115,7 @@ Handles HTTP GET requests to the '/delete' endpoint to delete a single car from 
 @param {Object} request - The HTTP request object.
 @param {Object} response - The HTTP response object.
 */
-router.delete("/delete/:make/:model/:year", handleHttpDeleteRequest);
+router.delete("/cars/:make/:model/:year", handleHttpDeleteRequest);
 async function handleHttpDeleteRequest(request, response) {
   try {
     let deleteCar = {
@@ -133,7 +133,7 @@ async function handleHttpDeleteRequest(request, response) {
         errorMessage: "Deleting car failed: " + err.message,
       });
     }
-  } catch (err) {
+  } catch(err) {
     logger.error("Deleting car failed: " + err);
     if (err instanceof DatabaseError) {
       response.status(500);
@@ -156,151 +156,54 @@ async function handleHttpDeleteRequest(request, response) {
 }
 
 /**
-Handles HTTP GET requests to the '/updateMake' endpoint to update the make of a single car in the database.
+Handles HTTP PUT requests to the '/cars/:make/:model/:year' endpoint to update a single car in the database.
 @param {Object} request - The HTTP request object.
 @param {Object} response - The HTTP response object.
 */
-// TODO since all three method are kind of similar, instead just have one, where the body could be all three parameters, that way the user can decide if he wants
-// to modify one or more fields. Makes it easier and less error prone.
-router.put(
-  "/updateMake/:make/:model/:year/:newMake",
-  handleHttpUpdateMakeRequest
-);
-async function handleHttpUpdateMakeRequest(request, response) {
+router.put("/cars/:make/:model/:year", handleHttpUpdateRequest);
+async function handleHttpUpdateRequest(request, response) {
   let updateCar = {
     make: request.params.make,
     model: request.params.model,
     year: request.params.year,
   };
-  let newMake = request.params.newMake; // TODO make this a rquest parameter
-  try {
-    if (await carModel.updateCarMake(updateCar, newMake)) {
-      response.status(200);
-      response.send({
-        message: "The car's make has been successfully updated",
-      });
-    } else {
-      response.status(500);
-      response.send({
-        errorMessage: "Updating car make failed: " + err.message,
-      });
-    }
-  } catch (err) {
-    logger.error("Update car make failed: " + err);
-    if (err instanceof DatabaseError) {
-      response.status(500);
-      response.send({
-        errorMessage: "Update car make failed: " + err.message,
-      });
-    } else if (err instanceof InvalidInputError) {
-      response.status(400);
-      response.send({
-        errorMessage: "Update car make failed: " + err.message,
-      });
-    } else {
-      response.status(500);
-      response.send({
-        errorMessage:
-          "Update car make failed. Unexpected error occured " + err.message,
-      });
-    }
-  }
-}
+  let { make, model, year } = request.body;
 
-// TODO make ur params lowercase since ":make/:year/:newModel" are all lowercase, the request.params.xyz has to
-// follow the same format.
-/**
-Handles HTTP GET requests to the '/updateModel' endpoint to update the model of a single car in the database.
-@param {Object} request - The HTTP request object.
-@param {Object} response - The HTTP response object.
-*/
-router.put(
-  "/updateModel/:make/:model/:year/:newModel",
-  handleHttpUpdateModelRequest
-);
-async function handleHttpUpdateModelRequest(request, response) {
-  let updateCar = {
-    make: request.params.Make,
-    model: request.params.Model,
-    year: request.params.Year,
-  };
-  let newModel = request.params.newModel;
-  try {
-    if (await carModel.updateCarModel(updateCar, newModel)) {
-      response.status(200);
-      response.send({
-        message: "The car's model has been successfully updated",
-      });
-    } else {
-      response.status(500);
-      response.send({
-        errorMessage: "Updating car model failed: " + err.message,
-      });
-    }
-  } catch (err) {
-    logger.error("Update car model failed: " + err);
-    if (err instanceof DatabaseError) {
-      response.status(500);
-      response.send({
-        errorMessage: "Update car model failed: " + err.message,
-      });
-    } else if (err instanceof InvalidInputError) {
-      response.status(400);
-      response.send({
-        errorMessage: "Update car model failed: " + err.message,
-      });
-    } else {
-      response.status(500);
-      response.send({
-        errorMessage:
-          "Update car model failed. Unexpected error occured " + err.message,
-      });
-    }
+  let updatedCar = {
+    make:make,
+    model:model,
+    year:year
   }
-}
 
-/**
-Handles HTTP GET requests to the '/updateYear' endpoint to update the year of a single car in the database.
-@param {Object} request - The HTTP request object.
-@param {Object} response - The HTTP response object.
-*/
-router.put("/updateYear/:make/:model/:year", handleHttpUpdateYearRequest);
-async function handleHttpUpdateYearRequest(request, response) {
-  let updateCar = {
-    make: request.params.Make,
-    model: request.params.Model,
-    year: request.params.Year,
-  };
-  const { newYear } = request.body;
   try {
-    if (await carModel.updateCarYear(updateCar, newYear)) {
+    if (await carModel.updateCar(updateCar, updatedCar)) {
       response.status(200);
       response.send({
-        message: "The car's year has been successfully updated",
+        message: "The car has been successfully updated",
       });
     } else {
       response.status(500);
       response.send({
-        errorMessage: "Updating car year failed: " + err.message,
+        errorMessage: "Updating car failed: " + err.message,
       });
     }
   } catch (err) {
-    logger.error("Update car year failed: " + err);
+    logger.error("Update car failed: " + err);
     if (err instanceof DatabaseError) {
       response.status(500);
       response.send({
-        errorMessage: "Update car year failed: " + err.message,
+        errorMessage: "Update car failed: " + err.message,
       });
     } else if (err instanceof InvalidInputError) {
       response.status(400);
       response.send({
-        errorMessage: "Update car year failed: " + err.message,
+        errorMessage: "Update car failed: " + err.message,
       });
     } else {
       response.status(500);
       response.send({
         errorMessage:
-          "Update car year failed. Unexpected error occured " + err.message,
+          "Update car failed. Unexpected error occured " + err.message,
       });
     }
   }
@@ -308,13 +211,6 @@ async function handleHttpUpdateYearRequest(request, response) {
 
 // TODO No need to export the handle request stuff, since it's already added in the router when you do router."put" or "post" for example.
 module.exports = {
-  handleHttpNewRequest,
-  handleHttpDeleteRequest,
-  handleHttpShowAllRequest,
-  handleHttpShowRequest,
-  handleHttpUpdateMakeRequest,
-  handleHttpUpdateModelRequest,
-  handleHttpUpdateYearRequest,
   router,
   routeRoot,
 };
