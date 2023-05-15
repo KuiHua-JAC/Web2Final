@@ -6,11 +6,10 @@ const logger = require("../logger.js");
 const { DatabaseError } = require("../error/DatabaseError.js");
 const { InvalidInputError } = require("../error/InvalidInputError.js");
 
-// TODO just like how my endpoint is reviews, make yours consistent such as cars
 // TODO update all the documentation to make sure that every endpoint is handled properly
 // TODO maybe have a local database taht would contain all the makes of each cars, so that no random brand could be added?
 /**
-Handles HTTP POST requests to the '/car' endpoint to add a new car to the database.
+Handles HTTP POST requests to the '/cars' endpoint to add a new car to the database.
 @param {Object} request - The HTTP request object.
 @param {Object} response - The HTTP response object.
 */
@@ -44,7 +43,7 @@ async function handleHttpNewRequest(request, response) {
 }
 
 /**
-Handles HTTP GET requests to the '/show' endpoint to find a single car in the database.
+Handles HTTP GET requests to the '/cars/:make/:model/:year' endpoint to find a single car in the database.
 @param {Object} request - The HTTP request object.
 @param {Object} response - The HTTP response object.
 */
@@ -78,7 +77,7 @@ async function handleHttpShowRequest(request, response) {
 }
 
 /**
-Handles HTTP GET requests to the '/showAll' endpoint to find all cars in the database.
+Handles HTTP GET requests to the '/cars' endpoint to find all cars in the database.
 @param {Object} request - The HTTP request object.
 @param {Object} response - The HTTP response object.
 */
@@ -111,7 +110,7 @@ async function handleHttpShowAllRequest(request, response) {
 }
 
 /**
-Handles HTTP GET requests to the '/delete' endpoint to delete a single car from the database.
+Handles HTTP GET requests to the '/cars/:make/:model/:year' endpoint to delete a single car from the database.
 @param {Object} request - The HTTP request object.
 @param {Object} response - The HTTP response object.
 */
@@ -209,7 +208,6 @@ async function handleHttpUpdateRequest(request, response) {
   }
 }
 
-// TODO No need to export the handle request stuff, since it's already added in the router when you do router."put" or "post" for example.
 module.exports = {
   router,
   routeRoot,

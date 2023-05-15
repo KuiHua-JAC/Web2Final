@@ -5,23 +5,27 @@ const validateUtils = require("./validateUtils.js");
 const validator = require("validator");
 const logger = require("../logger.js");
 
-//TODO makes sure that there is no car that has the same model/make/year. You can do so by finding a car first with that information, then
-// if there is one, throw an error. For reference, look at my AddCarReview in my model. Same thing for update, make sure there's only one instance of
-// the car.
 /**
-Inserts a new car document into the database.
-@param {string} make - The make of the car.
-@param {string} model - The model of the car.
-@param {number} year - The year of the car.
-@throws {Error} If the make, model, or year is invalid.
-@throws {DatabaseError} If there is an error adding the car document.
-*/
+ * Inserts a new car document into the database.
+ * @param {string} make - The make of the car.
+ * @param {string} model - The model of the car.
+ * @param {number} year - The year of the car.
+ * @throws {InvalidInputError} If the make, model, or year is invalid.
+ * @throws {DatabaseError} If there is an error adding the car document.
+ * @returns {Promise<boolean>} Returns true if the car was successfully added.
+ */
 
 // TODO check with car review model to see if the returns are the same, and update documentation accordingly (base ur code off of Kui Hua's)
 async function addCar(make, model, year) {
   validateUtils.isValidCar(make, model, year);
   try {
     const car = { make: make, model: model, year: year };
+
+    if (await getCarCollection().findOne({ make: car.make,model:car.model,year:car.year }))
+    throw new InvalidInputError(
+      "Cannot add car: car already in the database"
+    );
+
     const result = await getCarCollection().insertOne(car);
   } catch (err) {
     console.log(err.message);
@@ -30,14 +34,14 @@ async function addCar(make, model, year) {
 }
 
 /**
-Retrieves a single car document from the database based on make, model, and year.
-@param {string} make - The make of the car.
-@param {string} model - The model of the car.
-@param {number} year - The year of the car.
-@throws {Error} If no car document is found.
-@throws {DatabaseError} If there is an error getting the car document.
-*/
-
+ * Retrieves a single car document from the database based on make, model, and year.
+ * @param {string} make - The make of the car.
+ * @param {string} model - The model of the car.
+ * @param {number} year - The year of the car.
+ * @throws {Error} If no car document is found.
+ * @throws {DatabaseError} If there is an error getting the car document.
+ * @returns {Promise<object>} Returns the car document as an object if found.
+ */
 async function getSingleCar(make, model, year) {
   try {
     const query = { make: make, model: model, year: year };
@@ -53,11 +57,10 @@ async function getSingleCar(make, model, year) {
 }
 
 /**
-Gets all cars from the database.
-@returns {Promise<Array>} - An array of all cars in the database.
-@throws {DatabaseError} - If an error occurs while getting the cars from the database.
-*/
-
+ * Gets all cars from the database.
+ * @throws {DatabaseError} - If an error occurs while getting the cars from the database.
+ * @returns {Promise<Array>} - An array of all cars in the database.
+ */
 async function getAllCars() {
   try {
     const results = await getCarCollection().find({}).toArray();
@@ -72,10 +75,12 @@ async function getAllCars() {
 }
 
 /**
-Deletes a single car from the database.
-@param {Object} car - The car to be deleted from the database.
-@throws {DatabaseError} - If an error occurs while deleting the car from the database.
-*/
+ * Deletes a single car from the database.
+ * @param {Object} car - The car to be deleted from the database.
+ * @throws {InvalidInputError} If the make, model, or year is empty or invalid.
+ * @throws {DatabaseError} If an error occurs while deleting the car from the database.
+ * @returns {Promise<boolean>} Returns true if the car was successfully deleted.
+ */
 async function deleteSingleCar(car) {
   try {
     if (validator.isEmpty(car.make, { ignore_whitespace: true }))
@@ -95,10 +100,7 @@ async function deleteSingleCar(car) {
     let carDelete = await getCarCollection().deleteOne({
       make: car.make,
     });
-
-    // Means no cars were deleted
-    if (carDelete.deletedCount == 0)
-      throw new DatabaseError(`Delete ${car.make, car.model, car.year} failed.`);
+    
     return true;
 
   } catch (e) {
@@ -115,11 +117,24 @@ async function deleteSingleCar(car) {
   }
 }
 
-// TODO for update, you can combine all three together, look at my update for example.
-// In the frontend, when a "car" is being updated, the form will fill up with the old values first
-// so as long they dnt change the fields it's fine.
+/**
+ * Updates an existing car in the database with new information.
+ * @param {Object} car - The car object to update in the database.
+ * @param {Object} updatedCar - The updated car object with new information.
+ * @param {string} updatedCar.make - The make of the updated car.
+ * @param {string} updatedCar.model - The model of the updated car.
+ * @param {number} updatedCar.year - The year of the updated car.
+ * @throws {InvalidInputError} If the updated version of the car is already in the database.
+ * @throws {DatabaseError} If there was an error updating the car in the database.
+ * @returns {boolean} Returns true if the car was successfully updated in the database.
+ */
 async function updateCar(car, updatedCar) {
   try {
+    if (await getCarCollection().findOne({ make: updatedCar.make,model:updatedCar.model,year:updatedCar.year }))
+    throw new InvalidInputError(
+      "Cannot update car: the updated version is already in the database"
+    );
+
       let updatedNewCar = await getCarCollection().updateOne(car, {
         $set: {make: updatedCar.make
           ,model: updatedCar.model 
