@@ -14,12 +14,10 @@ const logger = require("../logger.js");
  * @throws {DatabaseError} If there is an error adding the car document.
  * @returns {Promise<boolean>} Returns true if the car was successfully added.
  */
-
-// TODO check with car review model to see if the returns are the same, and update documentation accordingly (base ur code off of Kui Hua's)
-async function addCar(make, model, year) {
+async function addCar(make, model, year, trim, color) {
   validateUtils.isValidCar(make, model, year);
   try {
-    const car = { make: make, model: model, year: year };
+    const car = { make: make, model: model, year: year, trim: trim, color: color };
 
     if (await getCarCollection().findOne({ make: car.make,model:car.model,year:car.year }))
     throw new InvalidInputError(
@@ -138,7 +136,9 @@ async function updateCar(car, updatedCar) {
       let updatedNewCar = await getCarCollection().updateOne(car, {
         $set: {make: updatedCar.make
           ,model: updatedCar.model 
-          ,year: updatedCar.year },
+          ,year: updatedCar.year, 
+          trim: updatedCar.trim,
+          color: updatedCar.color },
       });
       if (updatedNewCar.matchedCount == 0)
         throw new DatabaseError(

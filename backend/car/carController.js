@@ -6,7 +6,6 @@ const logger = require("../logger.js");
 const { DatabaseError } = require("../error/DatabaseError.js");
 const { InvalidInputError } = require("../error/InvalidInputError.js");
 
-// TODO update all the documentation to make sure that every endpoint is handled properly
 // TODO maybe have a local database taht would contain all the makes of each cars, so that no random brand could be added?
 /**
 Handles HTTP POST requests to the '/cars' endpoint to add a new car to the database.
@@ -16,8 +15,8 @@ Handles HTTP POST requests to the '/cars' endpoint to add a new car to the datab
 router.post("/cars", handleHttpNewRequest);
 async function handleHttpNewRequest(request, response) {
   try {
-    const { make, model, year } = request.body;
-    let newCar = await carModel.addCar(make, model, year);
+    const { make, model, year, trim, color } = request.body;
+    let newCar = await carModel.addCar(make, model, year, trim, color);
     response.status(200);
     response.send(newCar);
   } catch (err) {
@@ -166,12 +165,14 @@ async function handleHttpUpdateRequest(request, response) {
     model: request.params.model,
     year: request.params.year,
   };
-  let { make, model, year } = request.body;
+  let { make, model, year, trim,color } = request.body;
 
   let updatedCar = {
     make:make,
     model:model,
-    year:year
+    year:year,
+    trim:trim,
+    color:color
   }
 
   try {
