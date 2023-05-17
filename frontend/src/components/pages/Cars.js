@@ -27,9 +27,9 @@ export default function Cars() {
     <div className="px-4 py-10 bg-red-700 h-full">
       {state && state.response && <Alert response={state.response} />}
       <main>
-        <div className="mb-8 p-6">
-          <h1 className="text-center text-5xl font-bold mb-4">
-            Search for a particular car
+        <div className="mb-16 p-6">
+          <h1 className="text-center text-5xl font-bold mb-8 capitalize">
+            Individual Car Search
           </h1>
           <form
             className="flex w-full"
@@ -63,7 +63,9 @@ export default function Cars() {
           </form>
         </div>
         <div>
-          <h1 className="text-center text-5xl font-bold">All cars</h1>
+          <h1 className="text-center text-5xl font-bold capitalize italic text-white">
+            All cars
+          </h1>
           <div className="flex justify-center flex-wrap mt-8">
             {carsToDisplay}
           </div>
