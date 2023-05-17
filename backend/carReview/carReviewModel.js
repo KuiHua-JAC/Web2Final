@@ -70,15 +70,15 @@ async function addCarReview(userName, title, description, score, car, type) {
 }
 
 /**
- * Gets one car review that matches the given score.
- * @param {number} score - The score of the car review.
+ * Gets one car review that matches the given title.
+ * @param {String} title - The title of the car review.
  * @returns {object} - The car review document (which can be used as an object to access the fields).
- * @throws {InvalidInputError} - If the score given is out of range.
+ * @throws {InvalidInputError} - If the title is invalid.
  * @throws {DatabaseError} - If the document could not be found.
  */
 async function getSingleCarReview(title) {
   try {
-    if (validator.isEmpty(titleOfUpdate, { ignore_whitespace: true }))
+    if (validator.isEmpty(title, { ignore_whitespace: true }))
       //Makes sure the title is not empty
       throw new InvalidInputError("Car review title must not be empty");
 
@@ -141,9 +141,9 @@ async function updateOneCarReview(
     );
 
     // Makes sure there is no duplicate title in the database already
-    if (!(await getCarReviewCollection().findOne({ title: title })))
+    if (await getCarReviewCollection().findOne({ title: newTitle }))
       throw new InvalidInputError(
-        "Cannot edit post title: Title already in the database"
+        `Cannot edit post title:  ${newTitle} already in the database`
       );
 
     // Updates one car review score based on the title of the review

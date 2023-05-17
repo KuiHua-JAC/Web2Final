@@ -61,9 +61,9 @@ export default function Navbar() {
         >
           <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:flex-row md:space-x-8 md:mt-0 md:border-0 bg-black md:dark:bg-black dark:border-gray-700">
             <NavButton to="/" label="Home" />
+            <NavButton to="/cars" label="Cars" />
             <NavButton to="/reviews" label="Reviews" />
             <NavButton to="/profile" label="Profile" />
-            <NavButton to="/cars" label="Cars" />
             <NavButton to="/signin" label="Sign in" />
           </ul>
         </div>
