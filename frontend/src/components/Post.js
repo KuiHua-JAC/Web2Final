@@ -2,12 +2,7 @@ import { useNavigate } from "react-router";
 export default function Post({ post }) {
   const navigate = useNavigate();
   return (
-    <div
-      onClick={() => {
-        navigate("/cars"); //TODO put correct path and add navigation
-      }}
-      className="flex flex-col shadow-lg bg-white h-[400px] w-[600px] m-2 rounded-lg p-4 overflow-hidden hover:border-2 hover:border-black "
-    >
+    <div className="flex flex-col shadow-lg bg-white h-[400px] w-[600px] m-2 rounded-lg p-4 overflow-hidden hover:border-2 hover:border-black ">
       <div className="h-1/2">
         <img
           className="object-cover h-full w-full rounded-lg shadow-xl"
@@ -20,7 +15,12 @@ export default function Post({ post }) {
         <p>
           <b>Score: </b> {post.score}
         </p>
-        <p>
+        <p
+          className="hover:cursor-pointer hover:text-red-600"
+          onClick={() => {
+            navigate("/cars"); //TODO put correct path and add navigation
+          }}
+        >
           <b>Car:</b> {post.car.make} {post.car.model} {post.car.year}
         </p>
         <p>
