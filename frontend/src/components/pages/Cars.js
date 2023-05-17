@@ -56,7 +56,7 @@ export default function Cars() {
                   /^[a-zA-Z]+\s[a-zA-Z]+\s\d{4}$/.test(carSearch)
                 )
               } // regex taken from chatgpt
-              className="w-1/12 disabled:bg-gray-500 disabled:text-white disabled:border-0 bg-black rounded-lg shadow-lg text-white font-medium ml-4 hover:bg-white hover:text-black hover:border-2 hover:border-black"
+              className="w-36 disabled:bg-gray-500 disabled:text-white disabled:border-0 bg-black rounded-lg shadow-lg text-white font-medium ml-4 hover:bg-white hover:text-black hover:border-2 hover:border-black"
             >
               Search
             </button>
