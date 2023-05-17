@@ -18,7 +18,9 @@ export default function Post({ post }) {
         <p
           className="hover:cursor-pointer hover:text-red-600"
           onClick={() => {
-            navigate("/cars"); //TODO put correct path and add navigation
+            navigate(
+              `/cars/${post.car.make}/${post.car.model}/${post.car.year}`
+            ); //TODO put correct path and add navigation
           }}
         >
           <b>Car:</b> {post.car.make} {post.car.model} {post.car.year}
