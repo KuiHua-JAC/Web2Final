@@ -1,7 +1,7 @@
 import Alert from "../Alert";
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import Car from "../Car";
+import Car from "../CarCard";
 
 export default function Cars() {
   const { state } = useLocation();

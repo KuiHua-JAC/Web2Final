@@ -1,6 +1,13 @@
+import { useNavigate } from "react-router";
 export default function Car({ car }) {
+  const navigate = useNavigate();
   return (
-    <div className="flex flex-col shadow-lg bg-black h-[400px] w-[600px] m-2 rounded-lg p-4 overflow-hidden hover:border-2 hover:border-white ">
+    <div
+      className="flex flex-col shadow-lg bg-black h-[400px] w-[600px] m-2 rounded-lg p-4 overflow-hidden hover:border-2 hover:border-white"
+      onClick={() => {
+        navigate(`/cars/${car.make}/${car.model}/${car.year}`); //TODO put correct path and add navigation
+      }}
+    >
       <div className="h-1/2">
         {/* make a component to generate car images */}
         <img
