@@ -15,8 +15,8 @@ Handles HTTP POST requests to the '/cars' endpoint to add a new car to the datab
 router.post("/cars", handleHttpNewRequest);
 async function handleHttpNewRequest(request, response) {
   try {
-    const { make, model, year, trim, color } = request.body;
-    let newCar = await carModel.addCar(make, model, year, trim, color);
+    const { make, model, year, description, image } = request.body;
+    let newCar = await carModel.addCar(make, model, year, description, image);
     response.status(200);
     response.send(newCar);
   } catch (err) {
@@ -165,14 +165,14 @@ async function handleHttpUpdateRequest(request, response) {
     model: request.params.model,
     year: request.params.year,
   };
-  let { make, model, year, trim,color } = request.body;
+  let { make, model, year, description,image } = request.body;
 
   let updatedCar = {
     make:make,
     model:model,
     year:year,
-    trim:trim,
-    color:color
+    description:description,
+    image:image
   }
 
   try {
