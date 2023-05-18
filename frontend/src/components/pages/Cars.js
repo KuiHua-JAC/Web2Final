@@ -38,7 +38,7 @@ export default function Cars() {
               const model = carSearch.split(" ")[1];
               const year = carSearch.split(" ")[2];
 
-              navigate(`/cars/${model}/${make}/${year}`);
+              navigate(`/cars/${make}/${model}/${year}`);
             }}
           >
             <input
