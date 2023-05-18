@@ -1,3 +1,4 @@
+// Kui Hua's code, modified by aymeric briere
 import NavButton from "./NavButton";
 import { useNavigate } from "react-router-dom";
 import $ from "jquery";
@@ -63,8 +64,10 @@ export default function Navbar() {
             <NavButton to="/" label="Home" />
             <NavButton to="/cars" label="Cars" />
             <NavButton to="/reviews" label="Reviews" />
-            <NavButton to="/profile" label="Profile" />
-            <NavButton to="/signin" label="Sign in" />
+            <NavButton to="/profile" label="Profile" /> {/* TODO Only show when logedin */}
+            {/* TODO add spaces here to spslit the login buttons from the rest */}
+            <NavButton to="/signup" label="Sign Up" />
+            <NavButton to="/login" label="Log In" />
           </ul>
         </div>
       </div>

@@ -1,3 +1,4 @@
+// Kui Hua's code, modified by aymeric briere
 import { Route, Routes, Navigate } from "react-router-dom";
 import MainLayout from "../layouts/MainLayout";
 import Home from "./pages/Home";
@@ -10,6 +11,8 @@ import UpdateCar from "./pages/UpdateCar";
 import AddCar from "./pages/AddCar";
 import AddReview from "./pages/AddReview";
 import UpdateReview from "./pages/UpdateReview";
+import SignUp from "./pages/SignUp";
+import LogIn from "./pages/LogIn"; 
 
 export default function App() {
   return (
@@ -17,6 +20,8 @@ export default function App() {
       <Route path="/" element={<MainLayout />}>
         <Route index element={<Home />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/login" element={<LogIn />} />
         <Route path="/reviews" element={<Reviews />} />
         <Route path="/reviews/:title" element={<Review />} />
         <Route path="/reviews/add" element={<AddReview />} />
