@@ -4,6 +4,7 @@ const logger = require("../../logger.js");
 const app = require("../../app.js")
 const supertest = require("supertest");
 const testRequest = supertest(app);
+const db = "car_db_test";
 
 require("dotenv").config();
 jest.setTimeout(5000);

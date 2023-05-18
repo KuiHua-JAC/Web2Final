@@ -1,6 +1,7 @@
 const { DatabaseError } = require("../../error/DatabaseError.js");
 const { InvalidInputError } = require("../../error/InvalidInputError.js");
 const { MongoMemoryServer } = require("mongodb-memory-server");
+const db = "car_db_test";
 const carModel = require("../carModel.js");
 const logger = require("../../logger.js");
 require("dotenv").config();
@@ -94,7 +95,7 @@ beforeEach(async () => {
     await carModel.addCar(make, model, year, description, image);
   
     // Gets the data from the database
-    const cursor = await carModel.getCollection().find();
+    const cursor = await carModel.getCarCollection().find();
     const results = await cursor.toArray();
   
     // Checks if there is an array of data that matches in length with the data sent in
@@ -112,7 +113,7 @@ beforeEach(async () => {
     const { make, model, year, description, image } = generateCarData();
   
     // Inserts the car in the database
-    await carModel.getCollection().insertOne({
+    await carModel.getCarCollection().insertOne({
       make: make,
       model: model,
       year: year,
@@ -154,7 +155,7 @@ let  updatedTestCar=
 }
 
   // Inserts the car in the database
-  const collection = carModel.getCollection();
+  const collection = carModel.getCarCollection();
 
   await collection.insertOne({
     make: testCar.make,
@@ -168,7 +169,7 @@ let  updatedTestCar=
   await carModel.updateCar(testCar, updatedTestCar);
 
   // Gets the data from the database
-  const cursor = await carModel.getCollection().find();
+  const cursor = await carModel.getCarCollection().find();
   const results = await cursor.toArray();
   
 
@@ -195,7 +196,7 @@ test("Can delete a car from DB", async () => {
 
   
     // Inserts the car in the database
-    await carModel.getCollection().insertOne({
+    await carModel.getCarCollection().insertOne({
       make: testCar.make,
       model: testCar.model,
       year: testCar.year,
@@ -207,7 +208,7 @@ test("Can delete a car from DB", async () => {
   await carModel.deleteSingleCar(testCar);
 
   // Gets the data from the database
-  const cursor = await carModel.getCollection().find();
+  const cursor = await carModel.getCarCollection().find();
   const results = await cursor.toArray();
 
   // Checks if there is an array of data that matches in length with the data sent in
