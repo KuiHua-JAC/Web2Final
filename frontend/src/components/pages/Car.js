@@ -16,9 +16,14 @@ export default function Car() {
       setCar(car);
     }
     fetchData();
-  }, []);
+  }, [make, model, year]);
 
   return (
-    <div className="bg-gradient-to-b from-red-500 to-red-800">{car.make}</div>
+    <div className="bg-gradient-to-b from-red-500 to-red-800">
+      <h2>
+        {car.make} {car.model} {car.year}
+      </h2>
+      {car.description}
+    </div>
   );
 }
