@@ -134,7 +134,7 @@ test("Can update a car in DB", async () => {
 
   const newModel = "TT";
 
-  testCar=
+let  testCar=
 {
   make:"Audi",
   model:"R8",
@@ -144,7 +144,7 @@ test("Can update a car in DB", async () => {
       
 }
 
-  updatedTestCar=
+let  updatedTestCar=
 {
   make:"Audi",
   model:newModel,
@@ -165,7 +165,7 @@ test("Can update a car in DB", async () => {
   });
 
   // Changes the car's model to the new model
-  await carmModel.updateCar(testCar, updatedTestCar);
+  await carModel.updateCar(testCar, updatedTestCar);
 
   // Gets the data from the database
   const cursor = await carModel.getCollection().find();
@@ -184,7 +184,7 @@ test("Can update a car in DB", async () => {
 });
  
 test("Can delete a car from DB", async () => {
-  testCar=
+ let testCar=
 {
   make:"Audi",
   model:"R8",
@@ -252,7 +252,7 @@ test("Adding a car year that is more then the maximum year to the database shoul
 test("Trying to delete a car with a make that doesn't have the same capitalization in database should not throw an error", async () => {
   let errorFlag = false;
   try {
-    car = {
+   let car = {
       make:"Toyota",
       model:"HIGHLANDER",
       year:2022,
@@ -260,9 +260,24 @@ test("Trying to delete a car with a make that doesn't have the same capitalizati
       image:"https://images.pexels.com/photos/3729464/pexels-photo-3729464.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
     }
     await carModel.addCar("Toyota", "Highlander", 2022,"descritpion","https://images.pexels.com/photos/3729464/pexels-photo-3729464.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500");
-    await model.deleteSingleCar(car);
+    await carModel.deleteSingleCar(car);
   } catch (error) { 
     if (error instanceof DatabaseError) errorFlag = true;
   }
   expect(errorFlag).toBe(false);
+});
+
+test("Trying to delete a car with a model that doesn't exist in database should throw an error", async () => {
+  let errorFlag = false;
+  try {
+   let deleteCar = {
+      make:"Audi",
+      model:"Q3",
+      year:2017
+    }
+    await carModel.deleteSingleCar(deleteCar);
+  } catch (error) {
+    if (error instanceof DatabaseError) errorFlag = true;
+  }
+  expect(errorFlag).toBe(true);
 });
