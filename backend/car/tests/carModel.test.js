@@ -12,44 +12,44 @@ const carData = [
       make:"Audi",
       model:"R8",
       year:2019,
-      trim:"Performance",
-      color:"red"
+      description:"Performance car",
+      image:"https://images.pexels.com/photos/3729464/pexels-photo-3729464.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
 
     },
     {
         make:"Honda",
         model:"Civic",
         year:2022,
-        trim:"Touring",
-        color:"black"
+        description:"Performance car2",
+        image:"https://images.pexels.com/photos/3729464/pexels-photo-3729464.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
     },
     {
         make:"Acura",
         model:"TL",
         year:2014,
-        trim:"A-spec",
-        color:"silver"
+        description:"Performance car",
+        image:"https://images.pexels.com/photos/3729464/pexels-photo-3729464.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
     },
     {
         make:"Ford",
         model:"F-150",
         year:2016,
-        trim:"XL",
-        color:"blue"
+        description:"Performance car3",
+        image:"https://images.pexels.com/photos/3729464/pexels-photo-3729464.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
     },
     {
         make:"Tesla",
         model:"Model X",
         year:2022,
-        trim:"Plaid",
-        color:"white"
+        description:"Performance car4",
+      image:"https://images.pexels.com/photos/3729464/pexels-photo-3729464.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
     },
     {
         make:"Toyota",
         model:"Rav4",
         year:2017,
-        trim:"LE",
-        color:"brown"
+        description:"Performance car5",
+        image:"https://images.pexels.com/photos/3729464/pexels-photo-3729464.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
     },
   ];
 
@@ -90,8 +90,8 @@ beforeEach(async () => {
 // SUCCESS TEST CASES
 
   test("Can add a car to DB", async () => {
-    const { make, model, year, trim, color } = generateCarData();
-    await carModel.addCar(make, model, year, trim, color);
+    const { make, model, year, description, image } = generateCarData();
+    await carModel.addCar(make, model, year, description, image);
   
     // Gets the data from the database
     const cursor = await carModel.getCollection().find();
@@ -104,20 +104,20 @@ beforeEach(async () => {
     expect(results[0].make.toLowerCase() == make.toLowerCase()).toBe(true);
     expect(results[0].model.toLowerCase() == model.toLowerCase()).toBe(true);
     expect(results[0].year == year).toBe(true);
-    expect(results[0].trim.toLowerCase() == trim.toLowerCase()).toBe(true);
-    expect(results[0].color.toLowerCase() == color.toLowerCase()).toBe(true);
+    expect(results[0].description.toLowerCase() == description.toLowerCase()).toBe(true);
+    expect(results[0].image.toLowerCase() == image.toLowerCase()).toBe(true);
   });
 
   test("Can get a car in DB", async () => {
-    const { make, model, year, trim, color } = generateCarData();
+    const { make, model, year, description, image } = generateCarData();
   
     // Inserts the car in the database
     await carModel.getCollection().insertOne({
       make: make,
       model: model,
       year: year,
-      trim:trim,
-      color:color,
+      description:description,
+      image:image
     });
     // Gets the data from the database
   const car = await carModel.getSingleCar(make,model,year);
@@ -125,8 +125,8 @@ beforeEach(async () => {
   expect(car.make.toLowerCase() == make.toLowerCase()).toBe(true);
   expect(car.model.toLowerCase() == model.toLowerCase()).toBe(true);
   expect(car.year == year).toBe(true);
-  expect(car.trim.toLowerCase() == trim.toLowerCase()).toBe(true);
-  expect(car.color.toLowerCase() == color.toLowerCase()).toBe(true);
+  expect(results[0].description.toLowerCase() == description.toLowerCase()).toBe(true);
+  expect(results[0].image.toLowerCase() == image.toLowerCase()).toBe(true);
 });
 
 
@@ -134,17 +134,24 @@ test("Can update a car in DB", async () => {
 
   const newModel = "TT";
 
-  testCar={make:"Audi",
+  testCar=
+{
+  make:"Audi",
   model:"R8",
   year:2019,
-  trim:"Performance",
-  color:"red"}
+  description:"Performance",      
+  image:"https://images.pexels.com/photos/3729464/pexels-photo-3729464.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+      
+}
 
-  updatedTestCar={make:"Audi",
+  updatedTestCar=
+{
+  make:"Audi",
   model:newModel,
   year:2019,
-  trim:"Performance",
-  color:"red"}
+  description:"Performance",
+  image:"https://images.pexels.com/photos/3729464/pexels-photo-3729464.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+}
 
   // Inserts the car in the database
   const collection = carModel.getCollection();
@@ -153,8 +160,8 @@ test("Can update a car in DB", async () => {
     make: testCar.make,
     model: testCar.model,
     year: testCar.year,
-    trim:testCar.trim,
-    color:testCar.color,
+    description:testCar.description,
+    image:testCar.image
   });
 
   // Changes the car's model to the new model
@@ -172,16 +179,19 @@ test("Can update a car in DB", async () => {
   expect(results[0].make.toLowerCase() == updatedTestCar.make.toLowerCase()).toBe(true);
   expect(results[0].model.toLowerCase() == updatedTestCar.model.toLowerCase()).toBe(true);
   expect(results[0].year == updatedTestCar.year).toBe(true);
-  expect(results[0].trim.toLowerCase() == updatedTestCar.trim.toLowerCase()).toBe(true);
-  expect(results[0].color.toLowerCase() == updatedTestCar.color.toLowerCase()).toBe(true);
+  expect(results[0].description.toLowerCase() == description.toLowerCase()).toBe(true);
+  expect(results[0].image.toLowerCase() == image.toLowerCase()).toBe(true);
 });
  
 test("Can delete a car from DB", async () => {
-  testCar={make:"Audi",
+  testCar=
+{
+  make:"Audi",
   model:"R8",
   year:2019,
-  trim:"Performance",
-  color:"red"}
+  description:"Performance",
+  image:"https://images.pexels.com/photos/3729464/pexels-photo-3729464.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+}
 
   
     // Inserts the car in the database
@@ -189,8 +199,8 @@ test("Can delete a car from DB", async () => {
       make: testCar.make,
       model: testCar.model,
       year: testCar.year,
-      trim:testCar.trim,
-      color:testCar.color,
+      description:testCar.description,
+      image:testCar.image
     });
 
   // Deletes the car from the database
@@ -246,10 +256,10 @@ test("Trying to delete a car with a make that doesn't have the same capitalizati
       make:"Toyota",
       model:"HIGHLANDER",
       year:2022,
-      trim:"trim",
-      color:"color"
+      description:"description",
+      image:"https://images.pexels.com/photos/3729464/pexels-photo-3729464.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
     }
-    await carModel.addCar("Toyota", "Highlander", 2022,"trim","color");
+    await carModel.addCar("Toyota", "Highlander", 2022,"descritpion","https://images.pexels.com/photos/3729464/pexels-photo-3729464.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500");
     await model.deleteSingleCar(car);
   } catch (error) { 
     if (error instanceof DatabaseError) errorFlag = true;

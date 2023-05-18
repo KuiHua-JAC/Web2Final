@@ -14,10 +14,10 @@ const logger = require("../logger.js");
  * @throws {DatabaseError} If there is an error adding the car document.
  * @returns {Promise<boolean>} Returns true if the car was successfully added.
  */
-async function addCar(make, model, year, trim, color) {
+async function addCar(make, model, year, description, image) {
   validateUtils.isValidCar(make, model, year);
   try {
-    const car = { make: make, model: model, year: year, trim: trim, color: color };
+    const car = { make: make, model: model, year: year, description: description, image: image };
 
     if (await getCarCollection().findOne({ make: car.make,model:car.model,year:car.year }))
     throw new InvalidInputError(
@@ -137,8 +137,8 @@ async function updateCar(car, updatedCar) {
         $set: {make: updatedCar.make
           ,model: updatedCar.model 
           ,year: updatedCar.year, 
-          trim: updatedCar.trim,
-          color: updatedCar.color },
+          description: updatedCar.description,
+          image: updatedCar.image },
       });
       if (updatedNewCar.matchedCount == 0)
         throw new DatabaseError(
