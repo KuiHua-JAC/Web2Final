@@ -18,5 +18,7 @@ export default function Car() {
     fetchData();
   }, []);
 
-  return <div>{car.description}</div>;
+  return (
+    <div className="bg-gradient-to-b from-red-500 to-red-800">{car.make}</div>
+  );
 }

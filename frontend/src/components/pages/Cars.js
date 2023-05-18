@@ -24,7 +24,7 @@ export default function Cars() {
 
   const carsToDisplay = allCars.map((car) => <Car car={car} />);
   return (
-    <div className="px-4 py-10 bg-red-700 h-full">
+    <div className="px-4 py-10 bg-gradient-to-b from-red-500 to-red-800 h-full">
       {state && state.response && <Alert response={state.response} />}
       <main>
         <div className="mb-16 p-6">

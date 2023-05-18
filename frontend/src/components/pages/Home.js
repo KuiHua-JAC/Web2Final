@@ -5,7 +5,7 @@ import { useLocation } from "react-router-dom";
 export default function Home() {
   const { state } = useLocation();
   return (
-    <div className="px-4 py-10 bg-red-700 h-full">
+    <div className="px-4 py-10 bg-gradient-to-b from-red-500 to-red-800 h-full">
       {state && state.response && <Alert response={state.response} />}
       <main>
         <div className="flex items-center flex-col">

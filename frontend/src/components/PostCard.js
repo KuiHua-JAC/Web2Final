@@ -20,7 +20,7 @@ export default function Post({ post }) {
           onClick={() => {
             navigate(
               `/cars/${post.car.make}/${post.car.model}/${post.car.year}`
-            ); //TODO put correct path and add navigation
+            );
           }}
         >
           <b>Car:</b> {post.car.make} {post.car.model} {post.car.year}
