@@ -16,8 +16,8 @@ export default function SignUp() {
   const navigate = useNavigate();
 
   return (
-    <div className="bg-black text-white rounded p-4 flex flex-col mt-8">
-      <h1 className=" text-center font-bold mb-4">Add a car review</h1>
+    <div className="bg-black text-white shadow-lg rounded-lg p-4 flex flex-col mt-8">
+      <h1 className=" text-center font-bold mb-4">Sign up</h1>
       <form
         className="flex flex-col items-center"
         onSubmit={async (event) => {
@@ -30,7 +30,7 @@ export default function SignUp() {
               firstName: firstName,
               lastName: lastName,
               username: username,
-              isAdmin: false
+              isAdmin: false,
             }),
             headers: {
               "Content-type": "application/json; charset=UTF-8",

@@ -33,7 +33,7 @@ export default function Post({ post }) {
           <button
             className="uppercase text-white bg-black font-semibold px-8 rounded-lg hover:text-red-500 hover:bg-white hover:border hover:border-black"
             onClick={() => {
-              navigate(`/reviews/${post.title}`); //TODO put correct path and add navigation
+              navigate(`/reviews/${post.title}`);
             }}
           >
             View post

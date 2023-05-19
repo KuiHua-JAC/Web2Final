@@ -48,6 +48,10 @@ export default function Review() {
             <b>Type: </b>
             {review.type}
           </p>
+          <p>
+            <b>By: </b>
+            {review.username}
+          </p>
         </div>
       </div>
     </div>

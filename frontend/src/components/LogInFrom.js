@@ -13,8 +13,8 @@ export default function SignUp() {
   const navigate = useNavigate();
 
   return (
-    <div className="bg-black text-white rounded p-4 flex flex-col mt-8">
-      <h1 className=" text-center font-bold mb-4">Add a car review</h1>
+    <div className="bg-black text-white rounded-lg shadow-lg p-4 flex flex-col mt-8">
+      <h1 className=" text-center font-bold mb-4">Log in</h1>
       <form
         className="flex flex-col items-center"
         onSubmit={async (event) => {
