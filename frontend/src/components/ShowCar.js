@@ -1,11 +1,11 @@
 export default function ShowCar({ car }) {
   return (
-    <>
+    <div>
       <div className="">
         <img
           className="object-contain h-full w-full rounded-lg shadow-xl max-h-[600px] object-center bg-black"
-          src={`https://source.unsplash.com/random/?${car.make}`}
-          alt="Ken block audi etron gt"
+          src={car.img}
+          alt="car"
         />
       </div>
       <div className="mt-8">
@@ -17,6 +17,6 @@ export default function ShowCar({ car }) {
           {car.description}
         </p>
       </div>
-    </>
+    </div>
   );
 }

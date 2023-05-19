@@ -14,13 +14,9 @@ export default function Car() {
       );
       const car = await response.json();
       setResponse(response);
-      return car;
-    }
-    async function fetchData() {
-      const car = await getCar();
       setCar(car);
     }
-    fetchData();
+    getCar();
   }, [make, model, year]);
 
   return (

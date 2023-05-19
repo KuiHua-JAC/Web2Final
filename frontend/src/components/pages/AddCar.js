@@ -26,7 +26,7 @@ export default function AddCar() {
               model: model,
               year: year,
               description: description,
-              img: imageUrl,
+              image: imageUrl,
             }),
             headers: {
               "Content-type": "application/json; charset=UTF-8",
