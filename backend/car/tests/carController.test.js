@@ -5,6 +5,13 @@ const app = require("../../app.js")
 const supertest = require("supertest");
 const testRequest = supertest(app);
 const db = "car_db_test";
+const {
+  getCarReviewCollection,
+  getCarCollection,
+  getUserCollection,
+  initialize,
+  close
+} = require("../../dbConnection.js");
 
 require("dotenv").config();
 jest.setTimeout(5000);
@@ -25,7 +32,7 @@ beforeAll(async () => {
 beforeEach(async () => {
     try {
       const url = mongod.getUri();
-      await model.initialize(db, true, url);
+      await initialize(db, url);
     } catch (err) {
       logger.error(err.message);
     }
@@ -33,7 +40,7 @@ beforeEach(async () => {
   
   afterEach(async () => {
     try {
-      await model.close();
+      await close();
     } catch (err) {
       logger.error(err.message);
     }

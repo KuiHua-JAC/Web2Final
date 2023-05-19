@@ -4,6 +4,13 @@ const { MongoMemoryServer } = require("mongodb-memory-server");
 const model = require("../../carReview/carReviewModel.js");
 const db = "carReview_db_test";
 const logger = require("../../logger.js");
+const {
+    getCarReviewCollection,
+    getCarCollection,
+    getUserCollection,
+    initialize,
+    close
+  } = require("../../dbConnection.js");
 require("dotenv").config();
 jest.setTimeout(5000);
 
@@ -68,7 +75,7 @@ const generatecarReviewData = () =>
 beforeEach(async () => {
   try {
     const url = mongod.getUri();
-    await model.initialize(db, true, url);
+    await initialize(db,url);
   } catch (err) {
     logger.error(err.message);
   }
@@ -76,7 +83,7 @@ beforeEach(async () => {
 
 afterEach(async () => {
   try {
-    await model.close();
+    await close();
   } catch (err) {
     logger.error(err.message);
   }
@@ -96,7 +103,7 @@ await getCarCollection().insertOne({ make: 'Toyota', model: 'Highlander', year: 
 await model.addCarReview('testUser', title, description, score,{ make: 'Toyota', model: 'Highlander', year: '2022' }, 'SUV');
 
 // Gets the data from the database
-const cursor = await model.getCollection().find();
+const cursor = await dbConnection.getCollection().find();
 const results = await cursor.toArray();
 
 // Checks if there is an array of data that matches in length with the data sent in
@@ -113,7 +120,7 @@ test("Can read a car review in DB", async () => {
 const { title, description, score } = generatecarReviewData();
 
 // Inserts the car review in the database
-await model.getCollection().insertOne({
+await getCarReviewCollection().insertOne({
 title: title,
 description: description,
 score: score,
@@ -134,7 +141,7 @@ const { title, description, score } = generatecarReviewData();
 const newScore = 3;
 
 // Inserts the car review in the database
-const collection = model.getCollection();
+const collection = getCarReviewCollection();
 await collection.insertOne({
 title: title,
 description: description,
@@ -145,7 +152,7 @@ score: score,
 await model.updateOneCarReview(title,newScore,'newDescription','newTitle');
 
 // Gets the data from the database
-const cursor = await model.getCollection().find();
+const cursor = await getCarReviewCollection().find();
 const results = await cursor.toArray();
 
 // Checks if there is an array of data that matches in length with the data sent in
@@ -162,7 +169,7 @@ test("Can delete a car review from DB", async () => {
 const { title, description, score } = generatecarReviewData();
 
 // Inserts the car review in the database
-await model.getCollection().insertOne({
+await getCarReviewCollection().insertOne({
 title: title,
 description:description,
 score:score,
@@ -172,7 +179,7 @@ score:score,
 await model.deleteOneCarReview(title);
 
 // Gets the data from the database
-const cursor = await model.getCollection().find();
+const cursor = await getCarReviewCollection().find();
 const results = await cursor.toArray();
 
 // Checks if there is an array of data that matches in length with the data sent in
@@ -196,8 +203,8 @@ expect(error instanceof InvalidInputError).toBe(true);
 
 test("Adding a score review outside of bounds (positive) to the database should fail and throw an error", async () => {
     try {
-      await getUserCollection().insertOne({ username: 'testUser' });
-      await getCarCollection().insertOne({ make:'Toyota',model:'Highlander',year:'2022'});
+      await dbConnection.getUserCollection().insertOne({ username: 'testUser' });
+      await dbConnection.getCarCollection().insertOne({ make:'Toyota',model:'Highlander',year:'2022'});
       await model.addCarReview('testUser',"title", "description",409,{make:'Toyota',model:'Highlander',year:'2022'},'SUV');
     } catch (error) {
       expect(error instanceof InvalidInputError).toBe(true);
@@ -206,8 +213,8 @@ test("Adding a score review outside of bounds (positive) to the database should 
   
   test("Adding a score review outside of bounds (negative) to the database should fail and throw an error", async () => {
     try {
-      await getUserCollection().insertOne({ username: 'testUser' });
-      await getCarCollection().insertOne({ make:'Toyota',model:'Highlander',year:'2022'});
+      await dbConnection.getUserCollection().insertOne({ username: 'testUser' });
+      await dbConnection.getCarCollection().insertOne({ make:'Toyota',model:'Highlander',year:'2022'});
       await model.addCarReview('testUser',"title", "description",-409,{make:'Toyota',model:'Highlander',year:'2022'},'SUV');
     } catch (error) {
       expect(error instanceof InvalidInputError).toBe(true);
@@ -217,8 +224,8 @@ test("Adding a score review outside of bounds (positive) to the database should 
   test("Trying to delete a review with a title that doesn't have the same capitalization in database should not throw an error", async () => {
     let errorFlag = false;
     try {
-      await getUserCollection().insertOne({ username: 'testUser' });
-      await getCarCollection().insertOne({ make: 'Toyota', model: 'Highlander', year: '2022' });
+      await dbConnection.getUserCollection().insertOne({ username: 'testUser' });
+      await dbConnection.getCarCollection().insertOne({ make: 'Toyota', model: 'Highlander', year: '2022' });
       await model.addCarReview('testUser',"Toyota Highlander 2022", "description",4,{make:'Toyota',model:'Highlander',year:'2022'},'SUV');
       await model.deleteOneCarReview("Toyota HIGHLANDER 2022");
     } catch (error) {
