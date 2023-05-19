@@ -48,11 +48,20 @@ export default function Cars() {
             >
               <input
                 type="text"
+                list="cars"
                 onChange={(event) => {
                   setCarSearch(event.target.value);
                 }}
                 className="w-11/12 rounded-lg shadow-lg capitalize font-medium"
               />
+              <datalist id="cars">
+                {allCars.map((option) => (
+                  <option
+                    key={option}
+                    value={`${option.make} ${option.model} ${option.year}`}
+                  />
+                ))}
+              </datalist>
               <button
                 disabled={
                   !(

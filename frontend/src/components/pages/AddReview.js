@@ -59,7 +59,7 @@ export default function AddReview() {
           }
         }}
       >
-        <label htmlFor="type">Title</label>
+        <label htmlFor="type">Title*</label>
         <input
           className="text-black w-1/2 rounded-lg shadow-lg mb-4"
           type="text"
@@ -70,7 +70,7 @@ export default function AddReview() {
           required
         />
 
-        <label htmlFor="type">Description</label>
+        <label htmlFor="type">Description*</label>
         <input
           className="text-black w-1/2 rounded-lg shadow-lg mb-4"
           type="text"
@@ -81,7 +81,7 @@ export default function AddReview() {
           required
         />
 
-        <label htmlFor="name">Score</label>
+        <label htmlFor="name">Score*</label>
         <input
           className="text-black w-1/2 rounded-lg shadow-lg mb-4"
           type="number"
@@ -94,11 +94,11 @@ export default function AddReview() {
           required
         />
 
-        <label htmlFor="type">Car</label>
+        <label htmlFor="type">Car*</label>
         <input
           className="text-black w-1/2 rounded-lg shadow-lg mb-4"
           type="text"
-          list="carOptions"
+          list="cars"
           placeholder="Car.."
           onChange={(event) => {
             const carInfo = event.target.value.split(" ");
@@ -106,7 +106,7 @@ export default function AddReview() {
           }}
           required
         />
-        <datalist id="carOptions">
+        <datalist id="cars">
           {allCars.map((option) => (
             <option
               key={option}
@@ -115,7 +115,7 @@ export default function AddReview() {
           ))}
         </datalist>
 
-        <label htmlFor="type">Type</label>
+        <label htmlFor="type">Type*</label>
         <input
           className="text-black w-1/2 rounded-lg shadow-lg mb-4"
           type="text"
@@ -126,6 +126,7 @@ export default function AddReview() {
           required
         />
 
+        {/* TODO remove this and instead set the username at the start, when you fetch the user */}
         <label htmlFor="type">Username</label>
         <input
           className="text-black w-1/2 rounded-lg shadow-lg mb-4"
