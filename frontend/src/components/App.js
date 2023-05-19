@@ -13,29 +13,34 @@ import AddReview from "./pages/AddReview";
 import UpdateReview from "./pages/UpdateReview";
 import SignUp from "./pages/SignUp";
 import LogIn from "./pages/LogIn";
-import AboutUs from './pages/AboutUs'
+import AboutUs from "./pages/AboutUs";
 import React, { useEffect, useState } from "react";
 import LogOut from "./pages/LogOut";
 
 const LoggedInContext = React.createContext({
   isLoggedIn: false,
-  setIsLoggedIn: () => { },
+  setIsLoggedIn: () => {},
 });
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const loggedInValueAndSetter = [isLoggedIn, setIsLoggedIn]  //SO we can pass both value and setter
+  const loggedInValueAndSetter = [isLoggedIn, setIsLoggedIn]; //SO we can pass both value and setter
 
-  useEffect( () => {
+  useEffect(() => {
     async function checkForLoggedIn() {
       try {
-      const response = await fetch("http://localhost:1339/session/auth", {method: "GET", credentials: 'include'});
-      if(response.status === 200) {
-        setIsLoggedIn(true);
-      } else {
+        const response = await fetch("http://localhost:1339/session/auth", {
+          method: "GET",
+          credentials: "include",
+        });
+        if (response.status === 200) {
+          setIsLoggedIn(true);
+        } else {
+          setIsLoggedIn(false);
+        }
+      } catch (error) {
         setIsLoggedIn(false);
       }
-     } catch (error) {setIsLoggedIn(false);}
     }
 
     checkForLoggedIn();
@@ -46,7 +51,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Home />} />
-          <Route path="/profile" element={<Profile />} />
+          {isLoggedIn && <Route path="/profile" element={<Profile />} />}
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<LogIn />} />
           <Route path="/logout" element={<LogOut />} />
@@ -58,7 +63,10 @@ export default function App() {
           <Route path="/cars" element={<Cars />} />
           <Route path="/cars/:make/:model/:year" element={<Car />} />
           <Route path="/cars/add" element={<AddCar />} />
-          <Route path="/cars/update/:make/:model/:year" element={<UpdateCar />} />
+          <Route
+            path="/cars/update/:make/:model/:year"
+            element={<UpdateCar />}
+          />
           <Route path="*" element={<Navigate to="/" />} />
         </Route>
       </Routes>

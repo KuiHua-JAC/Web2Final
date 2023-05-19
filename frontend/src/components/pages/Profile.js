@@ -18,7 +18,7 @@ export default function Profile() {
 
         <p className="font-bold mt-8">Choose your color mode:</p>
         <DarkModeToggle />
-        <UpdateUsername></UpdateUsername>
+        <UpdateUsername />
       </div>
     </div>
   );
