@@ -31,6 +31,7 @@ export default function SignUp() {
             headers: {
               "Content-type": "application/json; charset=UTF-8",
             },
+            credentials: 'include'
           };
 
           const response = await fetch(`http://localhost:1339/session/login`, requestOptions);

@@ -12,7 +12,7 @@ app.use(httpLogger);
 // Make sure errorController is last!
 const controllers = ["carReview","car","user","session", "error" ];
 
-app.use(cors());
+app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 app.use(express.json());
 // Configuring body parser middleware
 app.use(bodyParser.urlencoded({ extended: false }));

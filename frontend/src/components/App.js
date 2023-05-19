@@ -14,7 +14,7 @@ import UpdateReview from "./pages/UpdateReview";
 import SignUp from "./pages/SignUp";
 import LogIn from "./pages/LogIn";
 import AboutUs from './pages/AboutUs'
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import LogOut from "./pages/LogOut";
 
 const LoggedInContext = React.createContext({
@@ -25,6 +25,21 @@ const LoggedInContext = React.createContext({
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const loggedInValueAndSetter = [isLoggedIn, setIsLoggedIn]  //SO we can pass both value and setter
+
+  useEffect( () => {
+    async function checkForLoggedIn() {
+      try {
+      const response = await fetch("http://localhost:1339/session/auth", {method: "GET", credentials: 'include'});
+      if(response.status === 200) {
+        setIsLoggedIn(true);
+      } else {
+        setIsLoggedIn(false);
+      }
+     } catch (error) {setIsLoggedIn(false);}
+    }
+
+    checkForLoggedIn();
+  }, []);
 
   return (
     <LoggedInContext.Provider value={loggedInValueAndSetter}>

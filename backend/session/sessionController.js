@@ -123,5 +123,23 @@ function checkSession(request, response) {
 router.post("/login", loginUser);
 router.get("/logout", logoutUser)
 router.get("/", checkSession);
+router.get("/auth", authUser);
+
+function authUser(request, response) {
+    try{
+        const authenticatedSession = authenticateUser(request);
+        if (!authenticatedSession) {
+            response.status(401).send("Unauthorized Access");
+            return;
+        } else {
+            response.status(200).send("Authorized Access");
+            return;
+        }
+    }catch (err) { 
+        logger.error("Unsuccefull authentication: " + err.message);
+        response.status(401).send("Unauthorized Access");
+        return; 
+    }
+}
 
 module.exports = { router, routeRoot, loginUser, authenticateUser, RefreshSession };

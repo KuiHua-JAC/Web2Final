@@ -15,7 +15,7 @@ function LogOut() {
         };
 
         const response = await fetch('http://localhost:1339/session/logout', requestOptions);
-        
+
         if (response.status === 401) {
           alert('Already logged out on the server. Will log out on the front-end as well');
           setIsLoggedIn(false);
@@ -25,15 +25,18 @@ function LogOut() {
           alert('Hope you enjoyed your visit. See you soon!');
           setIsLoggedIn(false);
           navigate('/');
+          return;
         } else {
           alert('Unexpected issue on the server while logging out. Will log out of the front-end anyways');
           setIsLoggedIn(false);
           navigate('/');
+          return;
         }
       } catch (error) {
         alert('An error occurred. Logging out on the front-end anyways');
         setIsLoggedIn(false);
         navigate('/');
+        return;
       }
     };
 
