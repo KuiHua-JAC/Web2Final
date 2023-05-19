@@ -58,15 +58,19 @@ export default function App() {
           <Route path="/reviews" element={<Reviews />} />
           <Route path="/aboutus" element={<AboutUs />} />
           <Route path="/reviews/:title" element={<Review />} />
-          <Route path="/reviews/add" element={<AddReview />} />
-          <Route path="/reviews/update/:title" element={<UpdateReview />} />
+          {isLoggedIn && <Route path="/reviews/add" element={<AddReview />} />}
+          {isLoggedIn && (
+            <Route path="/reviews/update/:title" element={<UpdateReview />} />
+          )}
           <Route path="/cars" element={<Cars />} />
           <Route path="/cars/:make/:model/:year" element={<Car />} />
-          <Route path="/cars/add" element={<AddCar />} />
-          <Route
-            path="/cars/update/:make/:model/:year"
-            element={<UpdateCar />}
-          />
+          {isLoggedIn && <Route path="/cars/add" element={<AddCar />} />}
+          {isLoggedIn && (
+            <Route
+              path="/cars/update/:make/:model/:year"
+              element={<UpdateCar />}
+            />
+          )}
           <Route path="*" element={<Navigate to="/" />} />
         </Route>
       </Routes>
