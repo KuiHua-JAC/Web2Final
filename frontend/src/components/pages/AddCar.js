@@ -12,10 +12,9 @@ export default function AddCar() {
   const [year, setYear] = useState();
   const [description, setDescription] = useState();
   const [image, setImage] = useState();
-  const [isAdmin, setIsAdmin] = useState(); // TODO admin check
   const navigate = useNavigate();
   return (
-    <div className="px-4 py-10 bg-gradient-to-b from-red-500 to-red-800 h-screen">
+    <div className="px-4 py-10 bg-gradient-to-b from-red-500 to-red-800 h-auto">
       <h1 className="text-center text-5xl font-bold capitalize italic text-black mb-16">
         Add a car
       </h1>
@@ -43,8 +42,7 @@ export default function AddCar() {
             requestOptions
           );
           const result = await response.json();
-          if (response.ok)
-            navigate(`http://localhost:1339/cars/${make}/${model}/${year}`);
+          if (response.ok) navigate(`/cars/${make}/${model}/${year}`);
           else
             navigate("/", {
               state: { response: result },
@@ -108,7 +106,6 @@ export default function AddCar() {
           required
         />
 
-        {/* ADD isAdmin, to only render the button if the guy is an admin */}
         {make && model && year && image && description && (
           <button
             className="mt-4 border rounded border-white hover:text-black hover:bg-white w-1/2"

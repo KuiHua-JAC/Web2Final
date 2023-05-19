@@ -2,7 +2,6 @@
 import NavButton from "./NavButton";
 import { useNavigate } from "react-router-dom";
 import $ from "jquery";
-import { useLocation } from "react-router-dom";
 import { LoggedInContext } from "./App";
 import { useContext } from "react";
 import { useCookies } from "react-cookie";
@@ -94,7 +93,7 @@ export default function Navbar() {
             />
             <NavButton
               to="/reviews"
-              label={cookies.lang === "EN" ? "Reviews" : "JSP"}
+              label={cookies.lang === "EN" ? "Reviews" : "Review"}
             />
             <NavButton to="/aboutus" label="About Us" />
             {isLoggedIn ? (

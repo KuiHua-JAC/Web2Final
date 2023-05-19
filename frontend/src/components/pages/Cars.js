@@ -40,7 +40,7 @@ export default function Cars() {
   return (
     <div>
       {state && state.response && <Alert response={state.response} />}
-      <div className="px-4 py-10 bg-gradient-to-b from-red-500 to-red-800 h-screen">
+      <div className="px-4 py-10 bg-gradient-to-b from-red-500 to-red-800 h-auto">
         <main>
           <div className="mb-16 p-6">
             <h1 className="text-center text-5xl font-bold mb-8 capitalize">

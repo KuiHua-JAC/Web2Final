@@ -23,7 +23,7 @@ export default function Review() {
     getReview();
   }, [title]);
   return (
-    <div className="px-4 py-10 bg-gradient-to-b from-red-500 to-red-800 h-screen">
+    <div className="px-4 py-10 bg-gradient-to-b from-red-500 to-red-800 h-auto">
       <div className="flex in flex-col shadow-lg bg-white w-auto m-2 rounded-lg p-4">
         {response.status >= 400 ? (
           <div>{review.errorMessage}</div>
