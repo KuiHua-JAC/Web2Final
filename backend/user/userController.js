@@ -143,8 +143,6 @@ Handles HTTP DELETE requests to the '/delete' endpoint to delete a single user f
 router.delete("/delete/:username", handleHttpDeleteRequest);
 async function handleHttpDeleteRequest(request, response) {
   try {
-    RefreshSession(request, response);
-
     if (await userModel.deleteSingleUser(request.params.username)) {
       response.status(200);
       response.send({ message: "The user has been successfully deleted" });

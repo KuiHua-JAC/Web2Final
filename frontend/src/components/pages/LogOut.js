@@ -1,3 +1,4 @@
+//Aymeric code
 import { useEffect, useContext } from 'react';
 import { LoggedInContext } from '../App';
 import { useNavigate } from 'react-router-dom';
