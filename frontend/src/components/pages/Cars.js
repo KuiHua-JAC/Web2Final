@@ -1,7 +1,9 @@
 import Alert from "../Alert";
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import Cookies from 'js-cookie';
 import Car from "../CarCard";
+
 
 export default function Cars() {
   const { state } = useLocation();
@@ -34,9 +36,12 @@ export default function Cars() {
           <form
             className="flex w-full"
             onSubmit={() => {
+              const searchQuery = carSearch;
               const make = carSearch.split(" ")[0];
               const model = carSearch.split(" ")[1];
               const year = carSearch.split(" ")[2];
+
+              Cookies.set('searchQuery', searchQuery)
 
               navigate(`/cars/${make}/${model}/${year}`);
             }}
