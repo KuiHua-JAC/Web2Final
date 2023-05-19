@@ -52,11 +52,11 @@ export default function AddReview() {
             requestOptions
           );
           const result = await response.json();
-          if (response.status >= 400) {
+          if (response.ok) navigate(`/reviews/${title}`);
+          else
             navigate("/", {
               state: { response: result },
             });
-          }
         }}
       >
         <label htmlFor="type">Title*</label>

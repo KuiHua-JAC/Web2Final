@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function AddCar() {
@@ -7,7 +7,7 @@ export default function AddCar() {
   const [year, setYear] = useState();
   const [description, setDescription] = useState();
   const [image, setImage] = useState();
-  const [username, setUsername] = useState();
+  const [isAdmin, setIsAdmin] = useState(); // TODO admin check
   const navigate = useNavigate();
   return (
     <div className="px-4 py-10 bg-gradient-to-b from-red-500 to-red-800 h-screen">
@@ -38,11 +38,12 @@ export default function AddCar() {
             requestOptions
           );
           const result = await response.json();
-          if (response.status >= 400) {
+          if (response.ok)
+            navigate(`http://localhost:1339/cars/${make}/${model}/${year}`);
+          else
             navigate("/", {
               state: { response: result },
             });
-          }
         }}
       >
         <label htmlFor="type">Make*</label>

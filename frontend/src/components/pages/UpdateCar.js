@@ -58,12 +58,17 @@ export default function UpdateCar() {
               "Content-type": "application/json; charset=UTF-8",
             },
           };
-
+          // The make,model and year aren't really changed, hence we can use the
           const response = await fetch(
             `http://localhost:1339/cars/${newMake}/${newModel}/${newYear}`,
             requestOptions
           );
+          const result = await response.json();
           if (response.ok) navigate(`/cars/${newMake}/${newModel}/${newYear}`);
+          else
+            navigate("/", {
+              state: { response: result },
+            });
         }}
       >
         <label htmlFor="make">Make*</label>
@@ -73,10 +78,6 @@ export default function UpdateCar() {
           type="text"
           placeholder="Make.."
           value={newMake}
-          onChange={(event) => {
-            setMake(event.target.value);
-          }}
-          required
         />
 
         <label htmlFor="model">Model*</label>
@@ -86,10 +87,6 @@ export default function UpdateCar() {
           type="text"
           placeholder="Model"
           value={newModel}
-          onChange={(event) => {
-            setModel(event.target.value);
-          }}
-          required
         />
 
         <label htmlFor="year">Year</label>
@@ -97,14 +94,8 @@ export default function UpdateCar() {
           disabled
           className="text-black w-1/2 rounded-lg shadow-lg mb-4 bg-gray-300"
           type="number"
-          min={1886}
-          max={new Date().getFullYear() + 1}
           placeholder="Year.."
           value={newYear}
-          onChange={(event) => {
-            setYear(event.target.value);
-          }}
-          required
         />
 
         <label htmlFor="description">Description*</label>
