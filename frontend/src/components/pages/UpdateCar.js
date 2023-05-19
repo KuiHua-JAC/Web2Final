@@ -132,7 +132,7 @@ export default function UpdateCar() {
         />
 
         <button
-          className="mt-4 border rounded border-white hover:text-black hover:bg-white w-1/2"
+          className="bg-white text-black px-12 py-2 rounded-lg font-semibold hover:text-white hover:bg-black border border-black hover:border-white"
           type="submit"
         >
           Update

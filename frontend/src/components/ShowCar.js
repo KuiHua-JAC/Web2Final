@@ -32,7 +32,19 @@ export default function ShowCar({ car }) {
         >
           Update
         </button>
-        <button className="bg-white text-black px-12 py-2 rounded-lg font-semibold hover:text-white hover:bg-black hover:border hover:border-white">
+        <button
+          onClick={async (event) => {
+            event.stopPropagation();
+            const response = await fetch(
+              `http://localhost:1339/cars/${car.make}/${car.model}/${car.year}`,
+              {
+                method: "DELETE",
+              }
+            );
+            if (response.ok) navigate(`/cars/`);
+          }}
+          className="bg-white text-black px-12 py-2 rounded-lg font-semibold hover:text-white hover:bg-black hover:border hover:border-white"
+        >
           Delete
         </button>
       </div>
