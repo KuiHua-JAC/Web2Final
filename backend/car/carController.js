@@ -5,6 +5,7 @@ const carModel = require("./carModel.js");
 const logger = require("../logger.js");
 const { DatabaseError } = require("../error/DatabaseError.js");
 const { InvalidInputError } = require("../error/InvalidInputError.js");
+const {authenticateUser, RefreshSession} = require("../session/sessionController.js");
 
 // TODO maybe have a local database taht would contain all the makes of each cars, so that no random brand could be added?
 /**
@@ -15,6 +16,8 @@ Handles HTTP POST requests to the '/cars' endpoint to add a new car to the datab
 router.post("/cars", handleHttpNewRequest);
 async function handleHttpNewRequest(request, response) {
   try {
+    RefreshSession(request, response);
+
     const { make, model, year, description, image } = request.body;
     let newCar = await carModel.addCar(make, model, year, description, image);
     response.status(200);
@@ -49,6 +52,8 @@ Handles HTTP GET requests to the '/cars/:make/:model/:year' endpoint to find a s
 router.get("/cars/:make/:model/:year", handleHttpShowRequest);
 async function handleHttpShowRequest(request, response) {
   try {
+    RefreshSession(request, response);
+
     let foundCar = await carModel.getSingleCar(
       request.params.make,
       request.params.model,
@@ -83,6 +88,8 @@ Handles HTTP GET requests to the '/cars' endpoint to find all cars in the databa
 router.get("/cars", handleHttpShowAllRequest);
 async function handleHttpShowAllRequest(request, response) {
   try {
+    RefreshSession(request, response);
+
     let carArray = await carModel.getAllCars();
     response.status(200);
     response.send(carArray);
@@ -116,6 +123,8 @@ Handles HTTP GET requests to the '/cars/:make/:model/:year' endpoint to delete a
 router.delete("/cars/:make/:model/:year", handleHttpDeleteRequest);
 async function handleHttpDeleteRequest(request, response) {
   try {
+    RefreshSession(request, response);
+
     let deleteCar = {
       make: request.params.make,
       model: request.params.model,
@@ -160,6 +169,8 @@ Handles HTTP PUT requests to the '/cars/:make/:model/:year' endpoint to update a
 */
 router.put("/cars/:make/:model/:year", handleHttpUpdateRequest);
 async function handleHttpUpdateRequest(request, response) {
+  RefreshSession(request, response);
+
   let updateCar = {
     make: request.params.make,
     model: request.params.model,

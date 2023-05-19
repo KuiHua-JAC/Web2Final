@@ -3,6 +3,8 @@ import NavButton from "./NavButton";
 import { useNavigate } from "react-router-dom";
 import $ from "jquery";
 import { useLocation } from "react-router-dom";
+import { LoggedInContext } from "./App";
+import { useContext } from "react";
 
 $(window).resize(function () {
   // Get the current window width
@@ -18,6 +20,8 @@ $(window).resize(function () {
 export default function Navbar() {
   const navigate = useNavigate();
   const { state } = useLocation(); //TODO keep track of the signin state
+  const [isLoggedIn, setIsLoggedIn] = useContext(LoggedInContext);
+
   return (
     <nav className="border-gray-200 bg-black">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
@@ -65,17 +69,17 @@ export default function Navbar() {
             <NavButton to="/cars" label="Cars" />
             <NavButton to="/reviews" label="Reviews" />
             <NavButton to="/aboutus" label="About Us" />
-            {/* {isLoggedIn ? ( */}
+            {isLoggedIn ? ( 
             <>
               <NavButton to="/profile" label="Profile" />
               <NavButton to="/logout" label="Log Out" />
             </>
-         {/* ) : ( */}
+          ) : ( 
             <>
               <NavButton to="/signup" label="Sign Up" />
               <NavButton to="/login" label="Log In" />
             </>
-          {/* )} */}
+           )} 
           </ul>
         </div>
       </div>

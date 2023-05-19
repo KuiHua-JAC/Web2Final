@@ -4,7 +4,7 @@ const port = 1339;
 const { initialize } = require("./dbConnection.js");
 const url =
   process.env.URL_PRE + process.env.MONGODB_PWD + process.env.URL_POST;
-
+//TODO: Add authentication for all endpoints (once finished)
 initialize("AutoFinder", url).then(
   app.listen(port) // Run the server
 );

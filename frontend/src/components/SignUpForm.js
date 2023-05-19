@@ -1,7 +1,8 @@
 //Aymeric Code
 
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { LoggedInContext } from "./App";
 
 /**
  * Component form to allow a user to sign up
@@ -13,6 +14,7 @@ export default function SignUp() {
   const [lastName, setLastName] = useState();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
+  const [isLoggedIn, setIsLoggedIn] = useContext(LoggedInContext);
   const navigate = useNavigate();
 
   return (
@@ -21,6 +23,7 @@ export default function SignUp() {
       <form
         className="flex flex-col items-center"
         onSubmit={async (event) => {
+            try {
           event.preventDefault();
           const requestOptions = {
             method: "POST",
@@ -37,16 +40,16 @@ export default function SignUp() {
             },
           };
 
-          const response = await fetch(
-            `http://localhost:1339/user`,
-            requestOptions
-          );
-          const result = await response.json();
-          if (response.status >= 400) {
-            navigate("/", {
-              state: { response: result },
-            });
+          const response = await fetch("http://localhost:1339/user", requestOptions);
+          if(response.status === 200) {
+            alert("Thanks for Signing up");
+            setIsLoggedIn(true);
+            navigate("/");
+          } else {
+            setIsLoggedIn(false);
+            alert("Invalid login, try again");
           }
+        } catch (error) {alert("An error occured, try again")}
         }}
       >
         <label htmlFor="username">Username</label>
@@ -96,7 +99,7 @@ export default function SignUp() {
         <label htmlFor="password">Password</label>
         <input
           className="text-black w-1/2 rounded"
-          type="text"
+          type="password"
           placeholder="Password.."
           onChange={(event) => {
             setPassword(event.target.value);

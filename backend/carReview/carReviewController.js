@@ -7,6 +7,7 @@ const { InvalidInputError } = require("../error/InvalidInputError.js");
 const router = express.Router();
 const routeRoot = "/";
 const logger = require("../logger.js");
+const {authenticateUser, RefreshSession} = require("../session/sessionController.js");
 
 // CREATE
 /**
@@ -18,6 +19,8 @@ router.post("/reviews", async (request, response) => {
   // Takes the title,description,score in the request body JSON
   const { title, description, score, username, type, car } = request.body;
   try {
+    RefreshSession(request, response);
+
     let carReview = await model.addCarReview(
       username,
       title,
@@ -62,6 +65,8 @@ router.get("/reviews/:title", async (request, response) => {
   let title = request.params.title;
 
   try {
+    RefreshSession(request, response);
+
     let carReview = await model.getSingleCarReview(title);
     response.status(200);
 
@@ -94,11 +99,11 @@ router.get("/reviews/:title", async (request, response) => {
  */
 router.get("/reviews", async (request, response) => {
   try {
-    let carReviewArray = await model.getAllCarReviews();
-    response.status(200);
+    RefreshSession(request, response);
 
-    // Sends a response wth the number of car reviews and the title of each one of them
-    response.send(carReviewArray);
+    let carReviewArray = await model.getAllCarReviews();
+    response.status(200).send(carReviewArray);;
+    return;
   } catch (err) {
     logger.error("Get all car review failed: " + err);
     if (err instanceof DatabaseError) {
@@ -106,11 +111,13 @@ router.get("/reviews", async (request, response) => {
       response.send({
         errorMessage: "Getting all car review failed." + err.message,
       });
+      return;
     } else if (err instanceof InvalidInputError) {
       response.status(400);
       response.send({
         errorMessage: "Getting all car review failed." + err.message,
       });
+      return;
     } else {
       response.status(500);
       response.send({
@@ -118,6 +125,7 @@ router.get("/reviews", async (request, response) => {
           "Getting all car review failed. Unexpected error occured" +
           err.message,
       });
+      return;
     }
   }
 });
@@ -134,6 +142,8 @@ router.put("/reviews/:title", async (request, response) => {
   // Takes the score in the request body JSON
   const { newTitle, score, description } = request.body;
   try {
+    RefreshSession(request, response);
+
     if (await model.updateOneCarReview(title, score, description, newTitle)) {
       response.status(200);
       response.send({ message: "Car review updated successfully" });
@@ -177,6 +187,8 @@ router.delete("/reviews/:title", async (request, response) => {
   let title = request.params.title;
 
   try {
+    RefreshSession(request, response);
+
     if (await model.deleteOneCarReview(title)) {
       response.status(200);
       response.send({ message: "Car review deleted successfully" });

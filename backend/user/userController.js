@@ -9,7 +9,9 @@ const userModel = require("./userModel.js");
 const logger = require("../logger.js");
 const { DatabaseError } = require("../error/DatabaseError.js");
 const { InvalidInputError } = require("../error/InvalidInputError.js");
+const {authenticateUser, RefreshSession} = require("../session/sessionController.js");
 
+//TODO fix the refresh session bug
 
 async function checkCredentials(username, password) {
   const user = await userModel.getSingleUserByUsername(username);
@@ -29,38 +31,33 @@ async function handleHttpregisterUser(request, response) {
 
     if (username && password && email && firstName && lastName) {
       if (validator.isEmail(email)) {
-          if (validator.isStrongPassword(password)) {
-            const hashedPassword = await bcrypt.hash(password, saltRounds);
-            await userModel.addUser(email, hashedPassword, firstName, lastName, username, isAdmin); //already checking if username is unique in addUser
-            response.status(200);
-            response.send({ success: true });
-            return;
-          } else {
-            console.log("Unsucceful registration: Password not strong enough.");
-            response.status(400);
-            response.send({ errorMessage: "Password not strong enough." });
-            return;
-          }
+        if (validator.isStrongPassword(password)) {
+          const hashedPassword = await bcrypt.hash(password, saltRounds);
+          await userModel.addUser(email, hashedPassword, firstName, lastName, username, isAdmin); //already checking if username is unique in addUser
+          response.status(200).send({ success: true });
+          return;
+        } else {
+          console.log("Unsucceful registration: Password not strong enough.");
+          response.status(400).send({ errorMessage: "Password not strong enough." });
+          return;
+        }
       } else {
         console.log("Unsucceful registration: Invalid email.")
-        response.status(400);
-        response.send({ errorMessage: "Invalid email" });
+        response.status(400).send({ errorMessage: "Invalid email" });
         return;
       }
-    } else { 
-      console.log("Unsucceful registration: Empty username, email, name or password."); 
-      response.status(400);
-      response.send({ errorMessage: "Empty username, email, name or password." });
+    } else {
+      console.log("Unsucceful registration: Empty username, email, name or password.");
+      response.status(400).send({ errorMessage: "Empty username, email, name or password." });
       return;
     }
-  } catch (error) { 
+  } catch (error) {
     console.log("Unsucceful registration: " + error);
-    response.status(400);
-    response.send({ errorMessage: "Unsucceful registration: " + error });
+    response.status(400).send({ errorMessage: "Unsucceful registration: " + error });;
     return;
   }
 
-  response.send({ success: false })
+  response.status(400).send({ success: false });
 }
 
 /**
@@ -145,6 +142,8 @@ Handles HTTP DELETE requests to the '/delete' endpoint to delete a single user f
 router.delete("/delete/:username", handleHttpDeleteRequest);
 async function handleHttpDeleteRequest(request, response) {
   try {
+    RefreshSession(request, response);
+
     if (await userModel.deleteSingleUser(request.params.username)) {
       response.status(200);
       response.send({ message: "The user has been successfully deleted" });
@@ -186,6 +185,8 @@ router.put("/updateName/:username", handleHttpUpdateNameRequest);
 async function handleHttpUpdateNameRequest(request, response) {
   const { newName: newUsername } = request.body;
   try {
+    RefreshSession(request, response);
+
     if (await userModel.updateUserName(request.params.userName, newUsername)) {
       response.status(200);
       response.send({
@@ -228,6 +229,8 @@ router.put("/updateEmail/:username", handleHttpUpdateEmailRequest);
 async function handleHttpUpdateEmailRequest(request, response) {
   const { newEmail } = request.body;
   try {
+    RefreshSession(request, response);
+
     if (await userModel.updateUserEmail(request.params.username, newEmail)) {
       response.status(200);
       response.send({
@@ -271,6 +274,8 @@ router.put("/updatePassword/:username", handleHttpUpdatePasswordRequest);
 async function handleHttpUpdatePasswordRequest(request, response) {
   const { newPassword } = request.body;
   try {
+    RefreshSession(request, response);
+
     if (
       await userModel.updateUserPassword(request.params.username, newPassword)
     ) {
