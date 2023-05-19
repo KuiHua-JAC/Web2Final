@@ -55,8 +55,8 @@ export default function Reviews() {
           </div>
           <div>
             <div className="flex justify-between items-center mx-6">
-              <h1 className="text-center text-5xl font-bold capitalize italic text-white">
-                All Reviews
+              <h1 className="text-center text-5xl font-bold capitalize italic text-black">
+                All posts
               </h1>
               <div className="flex justify-center items-center ">
                 <a
