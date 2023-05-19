@@ -6,7 +6,7 @@ export default function Post({ post }) {
       <div className="h-1/2">
         <img
           className="object-cover h-full w-full rounded-lg shadow-xl"
-          src={"../../img/audietrongt.jpg"}
+          src={`https://source.unsplash.com/random/?${post.car.make}`}
           alt="Ken block audi etron gt"
         />
       </div>
