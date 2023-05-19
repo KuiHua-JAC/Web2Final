@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import Car from "../CarCard";
+import { LoggedInContext } from "../App";
+import { useContext } from "react";
 
 /**
  * Page for displaying all the cars and their basic information
@@ -14,6 +16,7 @@ export default function Cars() {
   const navigate = useNavigate();
   const [allCars, setAllCars] = useState([]);
   const [carSearch, setCarSearch] = useState();
+  const [isLoggedIn, setIsLoggedIn] = useContext(LoggedInContext);
 
   useEffect(() => {
     async function getAllCars() {
@@ -95,12 +98,14 @@ export default function Cars() {
                 All cars
               </h1>
               <div className="flex justify-center items-center ">
-                <a
-                  href="/cars/add"
-                  className="pb-1 h-14 w-14 bg-gray-100 rounded-full text-green-600 flex justify-center border-2 border-green-600 items-center hover:bg-green-600 hover:text-white text-2xl"
-                >
-                  +
-                </a>
+                {isLoggedIn && (
+                  <a
+                    href="/cars/add"
+                    className="pb-1 h-14 w-14 bg-gray-100 rounded-full text-green-600 flex justify-center border-2 border-green-600 items-center hover:bg-green-600 hover:text-white text-2xl"
+                  >
+                    +
+                  </a>
+                )}
               </div>
             </div>
             <div className="flex justify-center flex-wrap mt-8">

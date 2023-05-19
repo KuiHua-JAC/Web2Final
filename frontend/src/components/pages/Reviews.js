@@ -4,9 +4,12 @@ import Alert from "../Alert";
 import { useState, useEffect } from "react";
 import Post from "../Post";
 import { useLocation, useNavigate } from "react-router-dom";
+import { LoggedInContext } from "../App";
+import { useContext } from "react";
 
 export default function Reviews() {
   const { state } = useLocation();
+  const [isLoggedIn, setIsLoggedIn] = useContext(LoggedInContext);
   const navigate = useNavigate();
   const [recentPosts, setRecentPosts] = useState([]);
   const [postSearch, setPostSearch] = useState("");
@@ -69,12 +72,14 @@ export default function Reviews() {
                 All posts
               </h1>
               <div className="flex justify-center items-center ">
-                <a
-                  href="/reviews/add"
-                  className="pb-1 h-14 w-14 bg-gray-100 rounded-full text-green-600 flex justify-center border-2 border-green-600 items-center hover:bg-green-600 hover:text-white text-2xl"
-                >
-                  +
-                </a>
+                {isLoggedIn && (
+                  <a
+                    href="/reviews/add"
+                    className="pb-1 h-14 w-14 bg-gray-100 rounded-full text-green-600 flex justify-center border-2 border-green-600 items-center hover:bg-green-600 hover:text-white text-2xl"
+                  >
+                    +
+                  </a>
+                )}
               </div>
             </div>
             <div className="flex justify-center flex-wrap mt-8">

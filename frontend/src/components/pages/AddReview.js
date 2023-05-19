@@ -1,12 +1,15 @@
 // Kui Hua's code
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { LoggedInContext } from "../App";
+import { useContext } from "react";
 
 /**
  * Page for adding a car post/review.
  * @page
  */
 export default function AddReview() {
+  const [isLoggedIn, setIsLoggedIn] = useContext(LoggedInContext);
   useEffect(() => {
     async function getAllCars() {
       let response = await fetch(`http://localhost:1339/cars`);
@@ -15,6 +18,11 @@ export default function AddReview() {
 
     async function fetchData() {
       const cars = await getAllCars();
+      if (isLoggedIn) {
+        const response = await fetch(`http://localhost:1339/session/users`);
+        const user = await response.json();
+        setUsername(user);
+      }
       setAllCars(cars);
     }
     fetchData();
@@ -25,7 +33,7 @@ export default function AddReview() {
   const [allCars, setAllCars] = useState([]);
   const [type, setType] = useState();
   const [car, setCar] = useState();
-  const [username, setUsername] = useState();
+  const [username, setUsername] = useState("");
   const navigate = useNavigate();
 
   return (
@@ -135,12 +143,14 @@ export default function AddReview() {
         {/* TODO remove this and instead set the username at the start, when you fetch the user */}
         <label htmlFor="type">Username</label>
         <input
+          disabled
           className="text-black w-1/2 rounded-lg shadow-lg mb-4"
           type="text"
           placeholder="Type.."
-          onChange={(event) => {
-            setUsername(event.target.value);
-          }}
+          value={username}
+          // onChange={(event) => {
+          //   setUsername(event.target.value);
+          // }}
           required
         />
 
