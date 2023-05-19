@@ -4,12 +4,26 @@ import LanguageToggle from "../LanguageToggle";
 import DarkModeToggle from "../DarkModeToggle";
 import DeleteUser from "../DeleteUser";
 import ShowAllUsers from "../ShowAllUsers";
+import { LoggedInContext } from "../App";
+import { useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 /**
  * Page for showing a user's profile
  * @page
  */
 export default function Profile() {
+  const [isLoggedIn, setIsLoggedIn] = useContext(LoggedInContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      navigate("/");
+    }
+
+
+  }, [isLoggedIn, navigate]);
+
   return (
     <div className="px-4 py-10 bg-gradient-to-b from-red-500 to-red-800 h-auto">
       <div className="bg-white h-auto rounded-lg shadow-lg p-4">
@@ -20,10 +34,14 @@ export default function Profile() {
 
         <p className="font-bold mt-8">Choose your color mode:</p>
         <DarkModeToggle />
+
         <UpdateUsername></UpdateUsername>
         <DeleteUser></DeleteUser>
         <ShowAllUsers></ShowAllUsers>
+
+
+
       </div>
     </div>
-  );
+  )
 }
