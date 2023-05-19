@@ -94,7 +94,7 @@ export default function Navbar() {
             />
             <NavButton
               to="/reviews"
-              label={cookies.lang === "EN" ? "Reviews" : "JSP"}
+              label={cookies.lang === "EN" ? "Reviews" : "Review"}
             />
             <NavButton to="/aboutus" label="About Us" />
             {isLoggedIn ? (

@@ -15,7 +15,7 @@ export default function AddCar() {
   const [isAdmin, setIsAdmin] = useState(); // TODO admin check
   const navigate = useNavigate();
   return (
-    <div className="px-4 py-10 bg-gradient-to-b from-red-500 to-red-800 h-screen">
+    <div className="px-4 py-10 bg-gradient-to-b from-red-500 to-red-800 h-auto">
       <h1 className="text-center text-5xl font-bold capitalize italic text-black mb-16">
         Add a car
       </h1>
@@ -43,8 +43,7 @@ export default function AddCar() {
             requestOptions
           );
           const result = await response.json();
-          if (response.ok)
-            navigate(`http://localhost:1339/cars/${make}/${model}/${year}`);
+          if (response.ok) navigate(`/cars/${make}/${model}/${year}`);
           else
             navigate("/", {
               state: { response: result },
