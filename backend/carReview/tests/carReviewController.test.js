@@ -1,10 +1,18 @@
 const { MongoMemoryServer } = require("mongodb-memory-server");
-const model = require("../carReviewController.js");
+const model = require("../carReviewModel.js");
 const db = "carReview_db_test";
 const logger = require("../../logger.js");
 const app = require("../../app.js");
 const supertest = require("supertest");
 const testRequest = supertest(app);
+const {
+    getCarReviewCollection,
+    getCarCollection,
+    getUserCollection,
+    initialize,
+    close
+  } = require("../../dbConnection.js");
+
 
 require("dotenv").config();
 jest.setTimeout(5000);
@@ -25,7 +33,7 @@ afterAll(async () => {
 beforeEach(async () => {
   try {
     const url = mongod.getUri();
-    await model.initialize(db, true, url);
+    await initialize(db, url);
   } catch (err) {
     logger.error(err.message);
   }
@@ -33,7 +41,7 @@ beforeEach(async () => {
 
 afterEach(async () => {
   try {
-    await model.close();
+    await close();
   } catch (err) {
     logger.error(err.message);
   }

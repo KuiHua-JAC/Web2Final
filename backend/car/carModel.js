@@ -89,7 +89,7 @@ async function deleteSingleCar(car) {
       //Makes sure the model is not empty
       throw new InvalidInputError("Car model must not be empty");
 
-      if (validator.isEmpty(car.year))
+      if (validator.isEmpty(car.year.toString()))
       //Makes sure the year is not empty
       throw new InvalidInputError("Car year must not be empty");
 

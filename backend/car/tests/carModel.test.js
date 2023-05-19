@@ -3,7 +3,13 @@ const { InvalidInputError } = require("../../error/InvalidInputError.js");
 const { MongoMemoryServer } = require("mongodb-memory-server");
 const db = "car_db_test";
 const carModel = require("../carModel.js");
-const { getCarCollection } = require("../../dbConnection.js");
+const {
+  getCarReviewCollection,
+  getCarCollection,
+  getUserCollection,
+  initialize,
+  close
+} = require("../../dbConnection.js");
 const logger = require("../../logger.js");
 require("dotenv").config();
 
@@ -75,7 +81,7 @@ const generateCarData = () =>
 beforeEach(async () => {
     try {
       const url = mongod.getUri();
-      await model.initialize(db, true, url);
+      await initialize(db, url);
     } catch (err) {
       logger.error(err.message);
     }
@@ -83,7 +89,7 @@ beforeEach(async () => {
   
   afterEach(async () => {
     try {
-      await model.close();
+      await close();
     } catch (err) {
       logger.error(err.message);
     }
@@ -96,7 +102,7 @@ beforeEach(async () => {
     await carModel.addCar(make, model, year, description, image);
   
     // Gets the data from the database
-    const cursor = await carModel.getCarCollection().find();
+    const cursor = await getCarCollection().find();
     const results = await cursor.toArray();
   
     // Checks if there is an array of data that matches in length with the data sent in
@@ -127,8 +133,8 @@ beforeEach(async () => {
   expect(car.make.toLowerCase() == make.toLowerCase()).toBe(true);
   expect(car.model.toLowerCase() == model.toLowerCase()).toBe(true);
   expect(car.year == year).toBe(true);
-  expect(results[0].description.toLowerCase() == description.toLowerCase()).toBe(true);
-  expect(results[0].image.toLowerCase() == image.toLowerCase()).toBe(true);
+  expect(car.description.toLowerCase() == description.toLowerCase()).toBe(true);
+  expect(car.image.toLowerCase() == image.toLowerCase()).toBe(true);
 });
 
 
@@ -156,7 +162,7 @@ let  updatedTestCar=
 }
 
   // Inserts the car in the database
-  const collection = carModel.getCarCollection();
+  const collection = getCarCollection();
 
   await collection.insertOne({
     make: testCar.make,
@@ -170,7 +176,7 @@ let  updatedTestCar=
   await carModel.updateCar(testCar, updatedTestCar);
 
   // Gets the data from the database
-  const cursor = await carModel.getCarCollection().find();
+  const cursor = await getCarCollection().find();
   const results = await cursor.toArray();
   
 
@@ -197,7 +203,7 @@ test("Can delete a car from DB", async () => {
 
   
     // Inserts the car in the database
-    await carModel.getCarCollection().insertOne({
+    await getCarCollection().insertOne({
       make: testCar.make,
       model: testCar.model,
       year: testCar.year,
@@ -209,7 +215,7 @@ test("Can delete a car from DB", async () => {
   await carModel.deleteSingleCar(testCar);
 
   // Gets the data from the database
-  const cursor = await carModel.getCarCollection().find();
+  const cursor = await getCarCollection().find();
   const results = await cursor.toArray();
 
   // Checks if there is an array of data that matches in length with the data sent in
