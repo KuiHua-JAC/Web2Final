@@ -10,28 +10,28 @@ const logger = require("../logger.js");
 const { DatabaseError } = require("../error/DatabaseError.js");
 const { InvalidInputError } = require("../error/InvalidInputError.js");
 
-const users = [];
-users['admin'] = { username: 'admin', password: 'admin1!', isAdmin: true, firstName: 'Admin', lastName: 'Admin', email: 'admin.email@gmail.com' };
-
 
 async function checkCredentials(username, password) {
-  return await bcrypt.compare(password, users[username].password);
+  const user = await userModel.getSingleUserByUsername(username);
+  const encryptedPassword = user.password;
+
+  return await bcrypt.compare(password, encryptedPassword);
 }
 
-async function registerUser(request, response) {
+async function handleHttpregisterUser(request, response) {
   try {
     const username = request.body.username;
     const password = request.body.password;
     const email = request.body.email;
     const firstName = request.body.firstName;
     const lastName = request.body.lastName;
+    const isAdmin = request.body.isAdmin ? request.body.isAdmin : false;
 
     if (username && password && email && firstName && lastName) {
       if (validator.isEmail(email)) {
-        if (!users[username]) {
           if (validator.isStrongPassword(password)) {
             const hashedPassword = await bcrypt.hash(password, saltRounds);
-            users[username] = { username: username, password: hashedPassword, isAdmin: false, firstName: firstName, lastName: lastName, email: email };
+            await userModel.addUser(email, hashedPassword, firstName, lastName, username, isAdmin); //already checking if username is unique in addUser
             response.status(200);
             response.send({ success: true });
             return;
@@ -41,21 +41,24 @@ async function registerUser(request, response) {
             response.send({ errorMessage: "Password not strong enough." });
             return;
           }
-        } else {
-          console.log("Unsucceful registration: Username already exists.");
-          response.status(400);
-          response.send({ errorMessage: "Username already exists" });
-          return;
-        }
       } else {
         console.log("Unsucceful registration: Invalid email.")
         response.status(400);
         response.send({ errorMessage: "Invalid email" });
         return;
       }
-    } else { console.log("Unsucceful registration: Empty username, email, name or password."); }
-
-  } catch (error) { console.log(error); }
+    } else { 
+      console.log("Unsucceful registration: Empty username, email, name or password."); 
+      response.status(400);
+      response.send({ errorMessage: "Empty username, email, name or password." });
+      return;
+    }
+  } catch (error) { 
+    console.log("Unsucceful registration: " + error);
+    response.status(400);
+    response.send({ errorMessage: "Unsucceful registration: " + error });
+    return;
+  }
 
   response.send({ success: false })
 }
@@ -65,8 +68,8 @@ Handles HTTP POST requests to the '/user' endpoint to add a new user to the data
 @param {Object} request - The HTTP request object.
 @param {Object} response - The HTTP response object.
 */
-router.post("/user", handleHttpNewRequest);
-async function handleHttpNewRequest(request, response) {
+router.post("/user", handleHttpregisterUser);
+/*async function handleHttpNewRequest(request, response) {
   try {
     const { email, password, firstName, lastName, username, isAdmin } =
       request.body;
@@ -100,7 +103,8 @@ async function handleHttpNewRequest(request, response) {
       });
     }
   }
-}
+}*/
+
 /**
 
 Handles HTTP GET requests to the '/show' endpoint to find a single user in the database.
@@ -339,7 +343,7 @@ async function handleHttpUpdatePasswordRequest(request, response) {
 }
 
 module.exports = {
-  handleHttpNewRequest,
+  handleHttpNewRequest: handleHttpregisterUser,
   handleHttpDeleteRequest,
   handleHttpShowAllRequest,
   handleHttpShowRequest,

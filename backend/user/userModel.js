@@ -21,29 +21,16 @@ const logger = require("../logger.js");
  * @throws {DatabaseError,InvalidInputError} if the document could not be added or if the input is invalid
  * @throws {InvalidInputError} if there is an invalid input
  */
-async function addUser(
-  email,
-  password,
-  firstName,
-  lastName,
-  username,
-  isAdmin
-) {
-  validateUtils.isValid(
-    email,
-    password,
-    firstName,
-    lastName,
-    username,
-    isAdmin
-  ); //no need to throw errors here as the method is already throwing errors if there is bad input
+async function addUser(email, password, firstName, lastName, username, isAdmin) {
+  try {
+  validateUtils.isValid(email, password, firstName, lastName, username, isAdmin);
+  const userExist = await getUserCollection().findOne({ username: username }) == null;
 
-  //Valid username, but we dont want duplicate. Check if already in database.
-  //Cannot check in the validateUtils.js file as this require a database connection
-  if (!((await getUserCollection().findOne({ username: username })) == null))
+  if (!userExist) {
     throw new InvalidInputError(
       "The user " + username + " is already in the database"
     );
+  }
 
   const newUser = {
     email: email,
@@ -54,15 +41,11 @@ async function addUser(
     isadmin: isAdmin,
   };
 
-  try {
     await getUserCollection().insertOne(newUser);
 
     return newUser;
   } catch (error) {
-    throw new DatabaseError(
-      "There was an error while inserting the data in the database: " +
-        error.message
-    );
+    throw error; // Re-throw the caught error
   }
 }
 
