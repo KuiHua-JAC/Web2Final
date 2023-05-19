@@ -95,14 +95,14 @@ async function getAllCars() {
  * @throws {DatabaseError} If an error occurs while deleting the car from the database.
  * @returns {Promise<boolean>} Returns true if the car was successfully deleted.
  */
-async function deleteSingleCar(car) {
+async function deleteSingleCar({ make, model, year }) {
   try {
     validateUtils.isValidCar(make, model, year);
 
     const query = {
-      make: { $regex: new RegExp(`^${car.make}$`, "i") },
-      model: car.model,
-      year: car.year,
+      make: make,
+      model: model,
+      year: year,
     };
 
     let carDelete = await getCarCollection().deleteOne(query);
@@ -112,20 +112,15 @@ async function deleteSingleCar(car) {
 
     return true;
   } catch (e) {
-    logger.warn(
-      `Error while deleting ${(car.make, car.model, car.year)}: ${e.message}`
-    );
+    logger.warn(`Error while deleting ${(make, model, year)}: ${e.message}`);
     if (e instanceof InvalidInputError)
       throw new InvalidInputError(
-        `Invalid input for deleting car: ${(car.make, car.model, car.year)}: ${
-          e.message
-        }`
+        `Invalid input for deleting car: ${(make, model, year)}: ${e.message}`
       );
     if (e instanceof DatabaseError)
       throw new DatabaseError(
-        `Database error while deleting car: ${
-          (car.make, car.model, car.year)
-        }: ${e.message}`
+        `Database error while deleting car:
+        ${(make, model, year)}: ${e.message}`
       );
     else throw e;
   }
