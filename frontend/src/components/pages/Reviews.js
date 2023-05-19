@@ -54,9 +54,19 @@ export default function Reviews() {
             </form>
           </div>
           <div>
-            <h1 className="text-center text-5xl font-bold capitalize italic text-white">
-              All cars
-            </h1>
+            <div className="flex justify-between items-center mx-6">
+              <h1 className="text-center text-5xl font-bold capitalize italic text-white">
+                All Reviews
+              </h1>
+              <div className="flex justify-center items-center ">
+                <a
+                  href="/reviews/add"
+                  className="pb-1 h-14 w-14 bg-gray-100 rounded-full text-green-600 flex justify-center border-2 border-green-600 items-center hover:bg-green-600 hover:text-white text-2xl"
+                >
+                  +
+                </a>
+              </div>
+            </div>
             <div className="flex justify-center flex-wrap mt-8">
               {postsToDisplay}
             </div>
