@@ -93,7 +93,11 @@ async function deleteSingleCar(car) {
       //Makes sure the year is not empty
       throw new InvalidInputError("Car year must not be empty");
 
-      const query = { make: car.make, model:car.model, year:car.year };
+      const query = {
+        make: { $regex: new RegExp(`^${car.make}$`, "i") },
+        model: car.model,
+        year: car.year,
+      };
 
     let carDelete = await getCarCollection().deleteOne({
       make: car.make,

@@ -3,6 +3,7 @@ const { InvalidInputError } = require("../../error/InvalidInputError.js");
 const { MongoMemoryServer } = require("mongodb-memory-server");
 const db = "car_db_test";
 const carModel = require("../carModel.js");
+const { getCarCollection } = require("../../dbConnection.js");
 const logger = require("../../logger.js");
 require("dotenv").config();
 
@@ -113,7 +114,7 @@ beforeEach(async () => {
     const { make, model, year, description, image } = generateCarData();
   
     // Inserts the car in the database
-    await carModel.getCarCollection().insertOne({
+    await getCarCollection().insertOne({
       make: make,
       model: model,
       year: year,
