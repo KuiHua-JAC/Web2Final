@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: user/userModel.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: user/userModel.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>///Aymeric Code
+
+const { getUserCollection } = require("../dbConnection.js");
+const { DatabaseError } = require("../error/DatabaseError.js");
+const { InvalidInputError } = require("../error/InvalidInputError.js");
+const validateUtils = require("./validateUtils.js");
+const validator = require("validator");
+const logger = require("../logger.js");
+
+//TODO unique email, isAdmin boolean not string
+//TODO isAdmin musts be bool not string
+/**
+ * Adds a new document to the collection, which is a user that contains an email, password, first name, last name, username and isAdmin.
+ * @param {string} email is the email of the user
+ * @param {string} password is the password of the user
+ * @param {string} firstName is the first name of the user
+ * @param {string} lastName is the last name of the user
+ * @param {string} username is the username of the user
+ * @param {boolean} isAdmin is the user an admin?
+ * @return the user object if successful, otherwise
+ * @throws {DatabaseError,InvalidInputError} if the document could not be added or if the input is invalid
+ * @throws {InvalidInputError} if there is an invalid input
+ */
+async function addUser(
+  email,
+  password,
+  firstName,
+  lastName,
+  username,
+  isAdmin
+) {
+  validateUtils.isValid(
+    email,
+    password,
+    firstName,
+    lastName,
+    username,
+    isAdmin
+  ); //no need to throw errors here as the method is already throwing errors if there is bad input
+
+  //Valid username, but we dont want duplicate. Check if already in database.
+  //Cannot check in the validateUtils.js file as this require a database connection
+  if (!((await getUserCollection().findOne({ username: username })) == null))
+    throw new InvalidInputError(
+      "The user " + username + " is already in the database"
+    );
+
+  const newUser = {
+    email: email,
+    password: password,
+    firstname: firstName,
+    lastname: lastName,
+    username: username,
+    isadmin: isAdmin,
+  };
+
+  try {
+    await getUserCollection().insertOne(newUser);
+
+    return newUser;
+  } catch (error) {
+    throw new DatabaseError(
+      "There was an error while inserting the data in the database: " +
+        error.message
+    );
+  }
+}
+
+/**
+ * Retrieves a single user document from the database based on the user's email.
+ * @param {string} email - The email of the user.
+ * @throws {Error} If no user document is found.
+ * @throws {DatabaseError} If there is an error getting the user document.
+ */
+async function getSingleUserByEmail(email) {
+  try {
+    const user = await getUserCollection().findOne({ email: email });
+
+    if (!user) {
+      throw new Error("No user found");
+    }
+    return user;
+  } catch (err) {
+    logger.fatal(err.message);
+    throw new DatabaseError("Error getting user");
+  }
+}
+
+/**
+ * Gets the info of a given user
+ *
+ * @param {string} username username of the user to get the info of
+ * @returns the user object
+ */
+async function getSingleUserByUsername(username) {
+  try {
+    let user = await getUserCollection().findOne({ username: username });
+
+    if (!user) {
+      throw new Error("No user found");
+    }
+    return user;
+  } catch (err) {
+    logger.fatal(err.message);
+    throw new DatabaseError("Error getting user");
+  }
+}
+
+/**
+ * Gets all users from the database.
+ * @returns {Promise&lt;Array>} - An array of all users in the database.
+ * @throws {DatabaseError} - If an error occurs while getting the users from the database.
+ */
+async function getAllUsers() {
+  try {
+    const users = await getUserCollection().find({}).toArray();
+    if (!users || users.length === 0) {
+      throw new Error("No users found");
+    }
+    return users;
+  } catch (err) {
+    logger.fatal(err.message);
+    throw new DatabaseError("Error getting users");
+  }
+}
+
+/**
+ * Deletes a single user from the database.
+ * @param {Object} username - The user to be deleted from the database.
+ * @throws {DatabaseError} - If an error occurs while deleting the user from the database.
+ * @returns true if the operation was succefull
+ */
+async function deleteSingleUser(username) {
+  try {
+    const result = await getUserCollection().deleteOne({ username: username });
+
+    if (result.deletedCount === 0) {
+      throw new Error("No user found with the given username");
+    }
+
+    return true;
+  } catch (err) {
+    logger.fatal(err.message);
+    throw new DatabaseError("Error deleting user");
+  }
+}
+
+/**
+ * Updates the Username of a single user in the database.
+ * @param {String} oldUsername - Old Username of the user to update.
+ * @param {string} newusername - The new username of the user.
+ * @throws {DatabaseError} - If an error occurs while updating the user in the database.
+ * @returns true if the operation was succefull
+ */
+async function updateUserame(oldUsername, newusername) {
+  validateUtils.isValidUsername(newUsername); //will throw if username is invalid
+
+  //Valid username, but we dont want duplicate. Check if already in database
+  if (!((await getUserCollection().findOne({ username: newUsername })) == null))
+    throw new InvalidInputError(
+      "The user " + newUsername + " is already in the database"
+    );
+
+  try {
+    // Update the user's username
+    const result = await getUserCollection().updateOne(
+      { username: oldUsername },
+      { $set: { username: newUsername } }
+    );
+    if (result.modifiedCount === 0) {
+      throw new InvalidInputError(
+        "User not found or username is the same as the current one"
+      );
+    }
+
+    return result.modifiedCount;
+  } catch (err) {
+    logger.fatal(err.message);
+    throw new DatabaseError("Error updating the user");
+  }
+}
+
+/**
+ * Updates the email of a single user in the database.
+ * @param {String} username - The username to be updated in the database.
+ * @param {string} email - The new email of the user.
+ * @throws {DatabaseError} - If an error occurs while updating the user in the database.
+ */
+async function updateUserEmail(username, email) {
+  validateUtils.isValidEmail(email);
+  try {
+    // Update the user's username
+    const result = await getUserCollection().updateOne(
+      { username: username },
+      { $set: { email: email } }
+    );
+    if (result.modifiedCount === 0) {
+      throw new InvalidInputError(
+        "User not found or username is the same as the current one"
+      );
+    }
+
+    return result.modifiedCount;
+  } catch (err) {
+    logger.fatal(err.message);
+    throw new DatabaseError("Error updating the user");
+  }
+}
+
+/**
+ * Updates the password of a single user in the database.
+ * @param {string} username - The user to be updated in the database.
+ * @param {string} password - The new password of the user.
+ * @throws {DatabaseError} - If an error occurs while updating the user in the database.
+ */
+async function updateUserPassword(username, password) {
+  validateUtils.isValidPassword(password);
+
+  try {
+    // Update the user's username
+    const result = await getUserCollection().updateOne(
+      { username: username },
+      { $set: { password: password } }
+    );
+
+    return true;
+  } catch (err) {
+    logger.fatal(err.message);
+    throw new DatabaseError("Error updating the user");
+  }
+}
+
+module.exports = {
+  addUser,
+  getSingleUserByEmail,
+  getAllUsers,
+  deleteSingleUser,
+  getSingleUserByUsername,
+  updateUserEmail,
+  updateUserPassword,
+  updateUserame,
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addCar">addCar</a></li><li><a href="global.html#addCarReview">addCarReview</a></li><li><a href="global.html#addUser">addUser</a></li><li><a href="global.html#deleteOneCarReview">deleteOneCarReview</a></li><li><a href="global.html#deleteSingleCar">deleteSingleCar</a></li><li><a href="global.html#deleteSingleUser">deleteSingleUser</a></li><li><a href="global.html#generatecarReviewData">generatecarReviewData</a></li><li><a href="global.html#getAllCarReviews">getAllCarReviews</a></li><li><a href="global.html#getAllCars">getAllCars</a></li><li><a href="global.html#getAllUsers">getAllUsers</a></li><li><a href="global.html#getSingleCar">getSingleCar</a></li><li><a href="global.html#getSingleCarReview">getSingleCarReview</a></li><li><a href="global.html#getSingleUserByEmail">getSingleUserByEmail</a></li><li><a href="global.html#getSingleUserByUsername">getSingleUserByUsername</a></li><li><a href="global.html#isValid">isValid</a></li><li><a href="global.html#isValidCar">isValidCar</a></li><li><a href="global.html#isValidEmail">isValidEmail</a></li><li><a href="global.html#isValidMake">isValidMake</a></li><li><a href="global.html#isValidModel">isValidModel</a></li><li><a href="global.html#isValidPassword">isValidPassword</a></li><li><a href="global.html#isValidYear">isValidYear</a></li><li><a href="global.html#updateCar">updateCar</a></li><li><a href="global.html#updateOneCarReview">updateOneCarReview</a></li><li><a href="global.html#updateUserEmail">updateUserEmail</a></li><li><a href="global.html#updateUserPassword">updateUserPassword</a></li><li><a href="global.html#updateUserame">updateUserame</a></li><li><a href="global.html#validUser">validUser</a></li><li><a href="global.html#validUsername">validUsername</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Fri May 19 2023 06:51:39 GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

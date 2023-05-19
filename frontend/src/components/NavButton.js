@@ -1,8 +1,8 @@
+// Kui Hua's code
 import { NavLink, useMatch, useResolvedPath } from "react-router-dom";
 /**
  * Button used for navigating to a route
  * @param {*} props Link to the page route and the name of the button
- * @returns
  */
 export default function NavButton(props) {
   let resolved = useResolvedPath(props.to);

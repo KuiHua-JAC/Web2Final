@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: pages/AddReview.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: pages/AddReview.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>// Kui Hua's code
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
+/**
+ * Page for adding a car post/review.
+ * @page
+ */
+export default function AddReview() {
+  useEffect(() => {
+    async function getAllCars() {
+      let response = await fetch(`http://localhost:1339/cars`);
+      return await response.json();
+    }
+
+    async function fetchData() {
+      const cars = await getAllCars();
+      setAllCars(cars);
+    }
+    fetchData();
+  }, []);
+  const [title, setTitle] = useState();
+  const [description, setDescription] = useState();
+  const [score, setScore] = useState();
+  const [allCars, setAllCars] = useState([]);
+  const [type, setType] = useState();
+  const [car, setCar] = useState();
+  const [username, setUsername] = useState();
+  const navigate = useNavigate();
+
+  return (
+    &lt;div className="px-4 py-10 bg-gradient-to-b from-red-500 to-red-800 h-screen">
+      &lt;h1 className="text-center text-5xl font-bold capitalize italic text-black mb-16">
+        Add a post
+      &lt;/h1>
+      &lt;form
+        className="flex flex-col font-bold items-center bg-white py-16 rounded-lg shadow-lg"
+        onSubmit={async (event) => {
+          event.preventDefault();
+          const requestOptions = {
+            method: "post",
+            body: JSON.stringify({
+              title: title,
+              description: description,
+              score: score,
+              type: type,
+              username: username,
+              car: car,
+            }),
+            headers: {
+              "Content-type": "application/json; charset=UTF-8",
+            },
+          };
+
+          const response = await fetch(
+            `http://localhost:1339/reviews`,
+            requestOptions
+          );
+          const result = await response.json();
+          if (response.ok) navigate(`/reviews/${title}`);
+          else
+            navigate("/", {
+              state: { response: result },
+            });
+        }}
+      >
+        &lt;label htmlFor="type">Title*&lt;/label>
+        &lt;input
+          className="text-black w-1/2 rounded-lg shadow-lg mb-4"
+          type="text"
+          placeholder="Title.."
+          onChange={(event) => {
+            setTitle(event.target.value);
+          }}
+          required
+        />
+
+        &lt;label htmlFor="type">Description*&lt;/label>
+        &lt;input
+          className="text-black w-1/2 rounded-lg shadow-lg mb-4"
+          type="text"
+          placeholder="Description"
+          onChange={(event) => {
+            setDescription(event.target.value);
+          }}
+          required
+        />
+
+        &lt;label htmlFor="name">Score*&lt;/label>
+        &lt;input
+          className="text-black w-1/2 rounded-lg shadow-lg mb-4"
+          type="number"
+          min={0}
+          max={5}
+          placeholder="Score.."
+          onChange={(event) => {
+            setScore(event.target.value);
+          }}
+          required
+        />
+
+        &lt;label htmlFor="type">Car*&lt;/label>
+        &lt;input
+          className="text-black w-1/2 rounded-lg shadow-lg mb-4"
+          type="text"
+          list="cars"
+          placeholder="Car.."
+          onChange={(event) => {
+            const carInfo = event.target.value.split(" ");
+            setCar({ make: carInfo[0], model: carInfo[1], year: carInfo[2] });
+          }}
+          required
+        />
+        &lt;datalist id="cars">
+          {allCars.map((option) => (
+            &lt;option
+              key={option}
+              value={`${option.make} ${option.model} ${option.year}`}
+            />
+          ))}
+        &lt;/datalist>
+
+        &lt;label htmlFor="type">Type*&lt;/label>
+        &lt;input
+          className="text-black w-1/2 rounded-lg shadow-lg mb-4"
+          type="text"
+          placeholder="Type.."
+          onChange={(event) => {
+            setType(event.target.value);
+          }}
+          required
+        />
+
+        {/* TODO remove this and instead set the username at the start, when you fetch the user */}
+        &lt;label htmlFor="type">Username&lt;/label>
+        &lt;input
+          className="text-black w-1/2 rounded-lg shadow-lg mb-4"
+          type="text"
+          placeholder="Type.."
+          onChange={(event) => {
+            setUsername(event.target.value);
+          }}
+          required
+        />
+
+        {score &amp;&amp; title &amp;&amp; description &amp;&amp; type &amp;&amp; car &amp;&amp; username &amp;&amp; (
+          &lt;button
+            className="mt-4 border rounded border-white hover:text-black hover:bg-white w-1/2"
+            type="submit"
+          >
+            Add
+          &lt;/button>
+        )}
+      &lt;/form>
+    &lt;/div>
+  );
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Fri May 19 2023 06:43:58 GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

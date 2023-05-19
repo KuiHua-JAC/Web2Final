@@ -1,0 +1,11 @@
+{
+  "source": {
+    "include": ["src/components", "src/components/pages"],
+    "includePattern": ".+\\.jsx?$",
+    "excludePattern": "(^|\\/|\\\\)_"
+  },
+  "opts": {
+    "recurse": true,
+    "destination": "./docs"
+  }
+}

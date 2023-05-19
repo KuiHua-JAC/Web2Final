@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: pages/UpdateCar.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: pages/UpdateCar.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>// Kui Hua's code
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+
+/**
+ * Page for updating a car's description.
+ * @page
+ */
+export default function UpdateCar() {
+  const { make, model, year } = useParams();
+  const navigate = useNavigate();
+  const [newMake, setMake] = useState("");
+  const [newModel, setModel] = useState("");
+  const [newYear, setYear] = useState("");
+  const [description, setDescription] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
+  //TODO add admin check to enable update
+
+  useEffect(() => {
+    async function getCar() {
+      try {
+        const response = await fetch(
+          `http://localhost:1339/cars/${make}/${model}/${year}`
+        );
+        if (response.ok) {
+          const carData = await response.json();
+          setMake(carData.make);
+          setModel(carData.model);
+          setYear(carData.year);
+          setDescription(carData.description);
+          setImageUrl(carData.image);
+        } else {
+          throw new Error("Failed to fetch car");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    getCar();
+  }, [make, model, year]);
+
+  return (
+    &lt;div className="px-4 py-10 bg-gradient-to-b from-red-500 to-red-800 h-screen">
+      &lt;h1 className="text-center text-5xl font-bold capitalize italic text-black mb-16">
+        Update Car
+      &lt;/h1>
+
+      &lt;form
+        className="flex flex-col font-bold items-center bg-white py-16 rounded-lg shadow-lg"
+        onSubmit={async (event) => {
+          event.preventDefault();
+          const requestOptions = {
+            method: "put",
+            body: JSON.stringify({
+              make: newMake,
+              model: newModel,
+              year: newYear,
+              description: description,
+              image: imageUrl,
+            }),
+            headers: {
+              "Content-type": "application/json; charset=UTF-8",
+            },
+          };
+          // The make,model and year aren't really changed, hence we can use the
+          const response = await fetch(
+            `http://localhost:1339/cars/${newMake}/${newModel}/${newYear}`,
+            requestOptions
+          );
+          const result = await response.json();
+          if (response.ok) navigate(`/cars/${newMake}/${newModel}/${newYear}`);
+          else
+            navigate("/", {
+              state: { response: result },
+            });
+        }}
+      >
+        &lt;label htmlFor="make">Make*&lt;/label>
+        &lt;input
+          disabled
+          className="text-black w-1/2 rounded-lg shadow-lg mb-4 bg-gray-300"
+          type="text"
+          placeholder="Make.."
+          value={newMake}
+        />
+
+        &lt;label htmlFor="model">Model*&lt;/label>
+        &lt;input
+          disabled
+          className="text-black w-1/2 rounded-lg shadow-lg mb-4 bg-gray-300"
+          type="text"
+          placeholder="Model"
+          value={newModel}
+        />
+
+        &lt;label htmlFor="year">Year&lt;/label>
+        &lt;input
+          disabled
+          className="text-black w-1/2 rounded-lg shadow-lg mb-4 bg-gray-300"
+          type="number"
+          placeholder="Year.."
+          value={newYear}
+        />
+
+        &lt;label htmlFor="description">Description*&lt;/label>
+        &lt;input
+          className="text-black w-1/2 rounded-lg shadow-lg mb-4"
+          type="text"
+          placeholder="Description"
+          value={description}
+          onChange={(event) => {
+            setDescription(event.target.value);
+          }}
+          required
+        />
+
+        &lt;label htmlFor="imageUrl">Image*&lt;/label>
+        &lt;input
+          className="text-black w-1/2 rounded-lg shadow-lg mb-4"
+          type="text"
+          placeholder="Image url"
+          value={imageUrl}
+          onChange={(event) => {
+            setImageUrl(event.target.value);
+          }}
+          required
+        />
+
+        &lt;button
+          className="bg-white text-black px-12 py-2 rounded-lg font-semibold hover:text-white hover:bg-black border border-black hover:border-white"
+          type="submit"
+        >
+          Update
+        &lt;/button>
+      &lt;/form>
+    &lt;/div>
+  );
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Fri May 19 2023 06:43:58 GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
