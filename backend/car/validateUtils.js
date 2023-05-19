@@ -44,7 +44,7 @@ function isValidMake(make) {
  */
 
 function isValidModel(model) {
-  if (!model || !validator.isLength(model, { min: 1, max: 50 })) {
+  if (!model || !validator.isLength(model, { min: 1, max: 50 })||validator.isEmpty(model)) {
     throw new InvalidInputError("The car model must not be empty or longer then 50 characters ");
   } 
 }
@@ -57,7 +57,7 @@ function isValidModel(model) {
  */
 
 function isValidYear(year) {
-  if (!year || !validator.isInt(year) || year < MINYEAR || year > MAXYEAR) {
+  if (!year || !validator.isInt(year.toString()) || year < MINYEAR || year > MAXYEAR) {
     throw new InvalidInputError("The car year must not be empty, it must be a number and it can not be less then 1886 or bigger then the next year from the current one");
   } else {
     return true;
