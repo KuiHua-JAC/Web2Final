@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Post from "./PostCard";
+import Post from "./Post";
 export default function RecentPosts() {
   const [recentPosts, setRecentPosts] = useState([]);
   useEffect(() => {
