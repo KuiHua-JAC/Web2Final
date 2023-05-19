@@ -8,12 +8,21 @@ export default function Cars() {
   const { state } = useLocation();
   const navigate = useNavigate();
   const [allCars, setAllCars] = useState([]);
-  const [carSearch, setCarSearch] = useState("");
+  const [carSearch, setCarSearch] = useState();
 
   useEffect(() => {
     async function getAllCars() {
-      let response = await fetch(`http://localhost:1339/cars`);
-      return await response.json();
+      try {
+        let response = await fetch(`http://localhost:1339/cars`);
+        if (response.ok) {
+          return await response.json();
+        } else {
+          throw new Error("Failed to fetch cars");
+        }
+      } catch (error) {
+        console.error(error);
+        return [];
+      }
     }
 
     async function fetchData() {
@@ -23,11 +32,10 @@ export default function Cars() {
     fetchData();
   }, []);
 
-  const carsToDisplay = allCars.map((car) => <Car car={car} />);
   return (
     <div>
       {state && state.response && <Alert response={state.response} />}
-      <div className="px-4 py-10 bg-gradient-to-b from-red-500 to-red-800 h-full">
+      <div className="px-4 py-10 bg-gradient-to-b from-red-500 to-red-800 h-screen">
         <main>
           <div className="mb-16 p-6">
             <h1 className="text-center text-5xl font-bold mb-8 capitalize">
@@ -91,7 +99,11 @@ export default function Cars() {
               </div>
             </div>
             <div className="flex justify-center flex-wrap mt-8">
-              {carsToDisplay}
+              {allCars.length === 0 ? (
+                <p className="font-bold text-lg">No cars available.</p>
+              ) : (
+                allCars.map((car) => <Car car={car} />)
+              )}
             </div>
           </div>
         </main>
