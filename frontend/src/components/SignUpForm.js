@@ -38,10 +38,13 @@ export default function SignUp() {
             headers: {
               "Content-type": "application/json; charset=UTF-8",
             },
+            credentials: 'include'
           };
 
-          const response = await fetch("http://localhost:1339/user", requestOptions);
-          if(response.status === 200) {
+
+          await fetch("http://localhost:1339/user", requestOptions);
+          const response1 = await fetch(`http://localhost:1339/session/login`, requestOptions);
+          if(response1.status === 200) {
             alert("Thanks for Signing up");
             setIsLoggedIn(true);
             navigate("/");

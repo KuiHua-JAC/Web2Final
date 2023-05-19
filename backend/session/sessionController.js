@@ -23,7 +23,7 @@ async function loginUser(req, res) {
                 logger.info("Succeffully logged in user " + username);
 
                 //Create a session object that will expire in 2 minutes
-                const sessionId = createSession(username, 2);
+                const sessionId = createSession(username, 5);
 
                 //Save the cookie that will expire
                 res.cookie("sessionId", sessionId, { expires: getSession(sessionId).expiresAt, httpOnly: true});

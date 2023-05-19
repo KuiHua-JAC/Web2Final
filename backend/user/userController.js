@@ -9,7 +9,7 @@ const userModel = require("./userModel.js");
 const logger = require("../logger.js");
 const { DatabaseError } = require("../error/DatabaseError.js");
 const { InvalidInputError } = require("../error/InvalidInputError.js");
-const {authenticateUser, RefreshSession} = require("../session/sessionController.js");
+const {authenticateUser, RefreshSession, loginUser} = require("../session/sessionController.js");
 
 //TODO fix the refresh session bug
 
@@ -34,6 +34,7 @@ async function handleHttpregisterUser(request, response) {
         if (validator.isStrongPassword(password)) {
           const hashedPassword = await bcrypt.hash(password, saltRounds);
           await userModel.addUser(email, hashedPassword, firstName, lastName, username, isAdmin); //already checking if username is unique in addUser
+
           response.status(200).send({ success: true });
           return;
         } else {
