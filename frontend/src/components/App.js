@@ -13,6 +13,7 @@ import AddReview from "./pages/AddReview";
 import UpdateReview from "./pages/UpdateReview";
 import SignUp from "./pages/SignUp";
 import LogIn from "./pages/LogIn";
+import AboutUs from './pages/AboutUs'
 
 export default function App() {
   return (
@@ -23,6 +24,7 @@ export default function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<LogIn />} />
         <Route path="/reviews" element={<Reviews />} />
+        <Route path="/aboutus" element={<AboutUs />} />
         <Route path="/reviews/:title" element={<Review />} />
         <Route path="/reviews/add" element={<AddReview />} />
         <Route path="/reviews/update/:title" element={<UpdateReview />} />

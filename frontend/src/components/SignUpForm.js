@@ -23,7 +23,7 @@ export default function SignUp() {
         onSubmit={async (event) => {
           event.preventDefault();
           const requestOptions = {
-            method: "post",
+            method: "POST",
             body: JSON.stringify({
               email: email,
               password: password,

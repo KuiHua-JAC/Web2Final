@@ -64,6 +64,7 @@ export default function Navbar() {
             <NavButton to="/" label="Home" />
             <NavButton to="/cars" label="Cars" />
             <NavButton to="/reviews" label="Reviews" />
+            <NavButton to="/aboutus" label="About Us" />
             {/* {isLoggedIn ? ( */}
             <>
               <NavButton to="/profile" label="Profile" />

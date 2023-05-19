@@ -64,46 +64,11 @@ async function handleHttpregisterUser(request, response) {
 }
 
 /**
-Handles HTTP POST requests to the '/user' endpoint to add a new user to the database.
+Handles HTTP POST requests to the '/user' endpoint to add/register a new user to the database.
 @param {Object} request - The HTTP request object.
 @param {Object} response - The HTTP response object.
 */
 router.post("/user", handleHttpregisterUser);
-/*async function handleHttpNewRequest(request, response) {
-  try {
-    const { email, password, firstName, lastName, username, isAdmin } =
-      request.body;
-    let newUser = await userModel.addUser(
-      email,
-      password,
-      firstName,
-      lastName,
-      username,
-      isAdmin
-    );
-    response.status(200);
-    response.send(newUser);
-  } catch (err) {
-    logger.error("Adding a new user failed: " + err);
-    if (err instanceof DatabaseError) {
-      response.status(500);
-      response.send({
-        errorMessage: "Adding a user failed." + err.message,
-      });
-    } else if (err instanceof InvalidInputError) {
-      response.status(400);
-      response.send({
-        errorMessage: "Adding a user failed." + err.message,
-      });
-    } else {
-      response.status(500);
-      response.send({
-        errorMessage:
-          "Adding a user failed. Unexpected error occurred" + err.message,
-      });
-    }
-  }
-}*/
 
 /**
 
