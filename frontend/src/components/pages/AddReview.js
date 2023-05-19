@@ -18,11 +18,6 @@ export default function AddReview() {
 
     async function fetchData() {
       const cars = await getAllCars();
-      if (isLoggedIn) {
-        const response = await fetch(`http://localhost:1339/session/users`);
-        const user = await response.json();
-        setUsername(user);
-      }
       setAllCars(cars);
     }
     fetchData();
@@ -143,14 +138,13 @@ export default function AddReview() {
         {/* TODO remove this and instead set the username at the start, when you fetch the user */}
         <label htmlFor="type">Username</label>
         <input
-          disabled
           className="text-black w-1/2 rounded-lg shadow-lg mb-4"
           type="text"
           placeholder="Type.."
           value={username}
-          // onChange={(event) => {
-          //   setUsername(event.target.value);
-          // }}
+          onChange={(event) => {
+            setUsername(event.target.value);
+          }}
           required
         />
 
