@@ -39,4 +39,8 @@ function getSession(sessionID) {
     return sessions[sessionID]
 }
 
-module.exports = {Session, createSession, getSession};
+function deleteSession(sessionId) {
+    delete sessions[sessionId]
+}
+
+module.exports = {Session, createSession, getSession, deleteSession};

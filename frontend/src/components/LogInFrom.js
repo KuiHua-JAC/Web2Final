@@ -20,7 +20,7 @@ export default function SignUp() {
         onSubmit={async (event) => {
           event.preventDefault();
           const requestOptions = {
-            method: "post",
+            method: "GET",
             body: JSON.stringify({
               password: password,
               username: username,
@@ -31,7 +31,7 @@ export default function SignUp() {
           };
 
           const response = await fetch(
-            `http://localhost:1339/user`,
+            `http://localhost:1339/session/login`,
             requestOptions
           );
           const result = await response.json();

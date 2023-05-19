@@ -1,15 +1,66 @@
 ////Aymeric Code
-
 const express = require("express");
 const router = express.Router();
 const routeRoot = "/";
+const validator = require("validator");
+const bcrypt = require("bcrypt");
+const saltRounds = 10;
 const userModel = require("./userModel.js");
 const logger = require("../logger.js");
 const { DatabaseError } = require("../error/DatabaseError.js");
 const { InvalidInputError } = require("../error/InvalidInputError.js");
 
-/**
+const users = [];
+users['admin'] = { username: 'admin', password: 'admin1!', isAdmin: true, firstName: 'Admin', lastName: 'Admin', email: 'admin.email@gmail.com' };
 
+
+async function checkCredentials(username, password) {
+  return await bcrypt.compare(password, users[username].password);
+}
+
+async function registerUser(request, response) {
+  try {
+    const username = request.body.username;
+    const password = request.body.password;
+    const email = request.body.email;
+    const firstName = request.body.firstName;
+    const lastName = request.body.lastName;
+
+    if (username && password && email && firstName && lastName) {
+      if (validator.isEmail(email)) {
+        if (!users[username]) {
+          if (validator.isStrongPassword(password)) {
+            const hashedPassword = await bcrypt.hash(password, saltRounds);
+            users[username] = { username: username, password: hashedPassword, isAdmin: false, firstName: firstName, lastName: lastName, email: email };
+            response.status(200);
+            response.send({ success: true });
+            return;
+          } else {
+            console.log("Unsucceful registration: Password not strong enough.");
+            response.status(400);
+            response.send({ errorMessage: "Password not strong enough." });
+            return;
+          }
+        } else {
+          console.log("Unsucceful registration: Username already exists.");
+          response.status(400);
+          response.send({ errorMessage: "Username already exists" });
+          return;
+        }
+      } else {
+        console.log("Unsucceful registration: Invalid email.")
+        response.status(400);
+        response.send({ errorMessage: "Invalid email" });
+        return;
+      }
+    } else { console.log("Unsucceful registration: Empty username, email, name or password."); }
+
+  } catch (error) { console.log(error); }
+
+  response.send({ success: false })
+}
+
+/**
 Handles HTTP POST requests to the '/user' endpoint to add a new user to the database.
 @param {Object} request - The HTTP request object.
 @param {Object} response - The HTTP response object.
@@ -297,4 +348,5 @@ module.exports = {
   handleHttpUpdatePasswordRequest,
   router,
   routeRoot,
+  checkCredentials
 };
