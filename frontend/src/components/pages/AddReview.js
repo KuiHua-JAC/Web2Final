@@ -112,12 +112,13 @@ export default function AddReview() {
           required
         />
         <datalist id="cars">
-          {allCars.map((option) => (
-            <option
-              key={option}
-              value={`${option.make} ${option.model} ${option.year}`}
-            />
-          ))}
+          {allCars.length > 0 &&
+            allCars.map((option) => (
+              <option
+                key={option}
+                value={`${option.make} ${option.model} ${option.year}`}
+              />
+            ))}
         </datalist>
 
         <label htmlFor="type">Type*</label>

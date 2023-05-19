@@ -1,6 +1,3 @@
-import Alert from "../Alert";
-import { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
 import SignUpForm from "../SignUpForm";
 
 /**
