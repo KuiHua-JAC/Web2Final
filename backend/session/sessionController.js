@@ -120,10 +120,24 @@ function checkSession(request, response) {
     response.status(200).send("User " + authenticatedSession.userSession.username + " is logged in");
 }
 
+//Code a method that return the current user
+function getCurrentUser(request, response) {
+    const authenticatedSession = authenticateUser(request);
+    if (!authenticatedSession) {
+        response.status(401).send("Unauthorized Access");
+        return;
+    }
+
+    RefreshSession(request, response)
+    console.log("User " + authenticatedSession.userSession.username + " is logged in");
+    response.status(200).send(authenticatedSession.userSession.username);
+}
+
 router.post("/login", loginUser);
 router.get("/logout", logoutUser)
 router.get("/", checkSession);
 router.get("/auth", authUser);
+router.get("/user", getCurrentUser);
 
 function authUser(request, response) {
     try{

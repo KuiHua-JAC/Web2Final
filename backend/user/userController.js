@@ -184,11 +184,9 @@ Handles HTTP PUT requests to the '/updateName' endpoint to update the name of a 
 */
 router.put("/updateName/:username", handleHttpUpdateNameRequest);
 async function handleHttpUpdateNameRequest(request, response) {
-  const { newName: newUsername } = request.body;
+  const newUsername = request.body.newUsername;
   try {
-    RefreshSession(request, response);
-
-    if (await userModel.updateUserName(request.params.userName, newUsername)) {
+    if (await userModel.updateUsername(request.params.username, newUsername)) {
       response.status(200);
       response.send({
         message: "The user's name has been successfully updated",

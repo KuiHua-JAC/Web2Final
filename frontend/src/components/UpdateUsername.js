@@ -1,48 +1,19 @@
-import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 /**
- * Page for updating a car's description.
+ * Page for updating a user's username.
  * @page
  */
 export default function UpdateUsername() {
-  const { make, model, year } = useParams();
   const navigate = useNavigate();
-  const [newMake, setMake] = useState("");
-  const [newModel, setModel] = useState("");
-  const [newYear, setYear] = useState("");
-  const [description, setDescription] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
-  //TODO add admin check to enable update
-
-  useEffect(() => {
-    async function getCar() {
-      try {
-        const response = await fetch(
-          `http://localhost:1339/cars/${make}/${model}/${year}`
-        );
-        if (response.ok) {
-          const carData = await response.json();
-          setMake(carData.make);
-          setModel(carData.model);
-          setYear(carData.year);
-          setDescription(carData.description);
-          setImageUrl(carData.image);
-        } else {
-          throw new Error("Failed to fetch car");
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    }
-
-    getCar();
-  }, [make, model, year]);
+  const [newUsername, setNewUsername] = useState("");
+  const [oldUsername, setOldUsername] = useState("");
 
   return (
     <div className="px-4 py-10 bg-gradient-to-b from-red-500 to-red-800 h-screen">
       <h1 className="text-center text-5xl font-bold capitalize italic text-black mb-16">
-        Update Car
+        Update Username
       </h1>
 
       <form
@@ -50,78 +21,48 @@ export default function UpdateUsername() {
         onSubmit={async (event) => {
           event.preventDefault();
           const requestOptions = {
-            method: "put",
+            method: "PUT",
             body: JSON.stringify({
-              make: newMake,
-              model: newModel,
-              year: newYear,
-              description: description,
-              image: imageUrl,
+              newUsername: newUsername
             }),
             headers: {
               "Content-type": "application/json; charset=UTF-8",
             },
           };
-          // The make,model and year aren't really changed, hence we can use the
+
           const response = await fetch(
-            `http://localhost:1339/cars/${newMake}/${newModel}/${newYear}`,
+            `http://localhost:1339/updateName/${oldUsername}`, 
             requestOptions
           );
-          const result = await response.json();
-          if (response.ok) navigate(`/cars/${newMake}/${newModel}/${newYear}`);
-          else
-            navigate("/", {
-              state: { response: result },
-            });
+          if(response.status === 200) {
+            alert("Username updated succeffully!");
+            console.log("Username updated succeffully!")
+          } else {
+            alert("Error while upating the username");
+            console.log("Error while upating the username")
+          }
         }}
       >
-        <label htmlFor="make">Make*</label>
-        <input
-          disabled
-          className="text-black w-1/2 rounded-lg shadow-lg mb-4 bg-gray-300"
-          type="text"
-          placeholder="Make.."
-          value={newMake}
-        />
-
-        <label htmlFor="model">Model*</label>
-        <input
-          disabled
-          className="text-black w-1/2 rounded-lg shadow-lg mb-4 bg-gray-300"
-          type="text"
-          placeholder="Model"
-          value={newModel}
-        />
-
-        <label htmlFor="year">Year</label>
-        <input
-          disabled
-          className="text-black w-1/2 rounded-lg shadow-lg mb-4 bg-gray-300"
-          type="number"
-          placeholder="Year.."
-          value={newYear}
-        />
-
-        <label htmlFor="description">Description*</label>
+        <label htmlFor="oldUsername">Old Username*</label>
         <input
           className="text-black w-1/2 rounded-lg shadow-lg mb-4"
           type="text"
-          placeholder="Description"
-          value={description}
+          placeholder="Old Username"
+          value={oldUsername}
           onChange={(event) => {
-            setDescription(event.target.value);
+            setOldUsername(event.target.value);
           }}
           required
         />
 
-        <label htmlFor="imageUrl">Image*</label>
+        <label htmlFor="newUsername">New Username*</label>
         <input
           className="text-black w-1/2 rounded-lg shadow-lg mb-4"
           type="text"
-          placeholder="Image url"
-          value={imageUrl}
+          placeholder="New Username"
+          value={newUsername}
           onChange={(event) => {
-            setImageUrl(event.target.value);
+            setNewUsername(event.target.value);
           }}
           required
         />

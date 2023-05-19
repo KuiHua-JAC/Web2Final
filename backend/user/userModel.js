@@ -135,7 +135,7 @@ async function deleteSingleUser(username) {
  * @throws {DatabaseError} - If an error occurs while updating the user in the database.
  * @returns true if the operation was succefull
  */
-async function updateUserame(oldUsername, newusername) {
+async function updateUsername(oldUsername, newUsername) {
   validateUtils.isValidUsername(newUsername); //will throw if username is invalid
 
   //Valid username, but we dont want duplicate. Check if already in database
@@ -221,5 +221,5 @@ module.exports = {
   getSingleUserByUsername,
   updateUserEmail,
   updateUserPassword,
-  updateUserame,
+  updateUsername,
 };
