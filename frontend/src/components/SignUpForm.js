@@ -4,8 +4,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 /**
- * Form with input for title description and score to add a car review to the database
- * @returns A JSX element that contains a form to signup/add an user
+ * Component form to allow a user to sign up
+ * @component
  */
 export default function SignUp() {
   const [username, setUsername] = useState();

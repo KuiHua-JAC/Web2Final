@@ -1,4 +1,9 @@
+// Kui Hua's code
 import { useNavigate } from "react-router";
+/**
+ * Component for displaying the basic information of the car passed in
+ * @component
+ */
 export default function Car({ car }) {
   const navigate = useNavigate();
   return (

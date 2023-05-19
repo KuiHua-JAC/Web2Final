@@ -1,5 +1,11 @@
+// Kui Hua's code
 //TODO add admin check to enable update and delete
 import { useNavigate } from "react-router";
+
+/**
+ * Component that displays a specific car. Authorized users can either edit or delete
+ * @component
+ */
 export default function ShowCar({ car }) {
   const navigate = useNavigate();
   return (

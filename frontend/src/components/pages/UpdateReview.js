@@ -1,6 +1,11 @@
+// Kui Hua's code
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
+/**
+ * Page for updating a car review's score,description and a mandatory new title.
+ * @page
+ */
 export default function UpdateReview() {
   const { title } = useParams();
   const navigate = useNavigate();

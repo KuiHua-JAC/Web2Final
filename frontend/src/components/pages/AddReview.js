@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+/**
+ * Page for adding a car post/review.
+ * @page
+ */
 export default function AddReview() {
   useEffect(() => {
     async function getAllCars() {

@@ -1,9 +1,14 @@
+// Kui Hua's code
 import Alert from "../Alert";
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import Car from "../CarCard";
 
+/**
+ * Page for displaying all the cars and their basic information
+ * @page
+ */
 export default function Cars() {
   const { state } = useLocation();
   const navigate = useNavigate();

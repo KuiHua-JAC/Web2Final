@@ -2,6 +2,10 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import ShowCar from "../ShowCar";
 
+/**
+ * Page for displaying full information of a car.
+ * @page
+ */
 export default function Car() {
   const { make, model, year } = useParams();
   const [car, setCar] = useState({});

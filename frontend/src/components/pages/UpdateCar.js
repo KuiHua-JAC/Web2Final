@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
+/**
+ * Page for updating a car's description.
+ * @page
+ */
 export default function UpdateCar() {
   const { make, model, year } = useParams();
   const navigate = useNavigate();

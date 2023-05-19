@@ -1,4 +1,10 @@
+// Kui Hua's code
 import { useNavigate } from "react-router";
+
+/**
+ * Component to display the information about a post
+ * @component
+ */
 export default function Post({ post }) {
   const navigate = useNavigate();
   return (

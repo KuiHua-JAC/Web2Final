@@ -1,5 +1,11 @@
+// Kui Hua's code
 import { useState, useEffect } from "react";
 import Post from "./Post";
+
+/**
+ * Component that displays three recents posts (basic information)
+ * @component
+ */
 export default function RecentPosts() {
   const [recentPosts, setRecentPosts] = useState([]);
   useEffect(() => {
@@ -21,7 +27,9 @@ export default function RecentPosts() {
     fetchData();
   }, []);
 
-  const postsToDisplay = recentPosts.map((post) => <Post post={post} />);
+  const postsToDisplay = recentPosts
+    .reverse()
+    .map((post) => <Post post={post} />);
 
   return (
     <div className="mt-16">

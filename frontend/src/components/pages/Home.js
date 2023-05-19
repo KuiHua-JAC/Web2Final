@@ -2,6 +2,10 @@ import Alert from "../Alert";
 import RecentPosts from "../RecentPosts";
 import { useLocation } from "react-router-dom";
 
+/**
+ * Home page
+ * @page
+ */
 export default function Home() {
   const { state } = useLocation();
   return (

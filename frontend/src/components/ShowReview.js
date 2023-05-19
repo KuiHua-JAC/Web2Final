@@ -1,5 +1,9 @@
 import { useNavigate } from "react-router";
 
+/**
+ * Component that displays a specific car post/review. Authorized users can either edit or delete
+ * @component
+ */
 export default function ShowReview({ car, review }) {
   const navigate = useNavigate();
   return (

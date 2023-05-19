@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+/**
+ * Page for adding a car.
+ * @page
+ */
 export default function AddCar() {
   const [make, setMake] = useState();
   const [model, setModel] = useState();

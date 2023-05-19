@@ -2,6 +2,10 @@ import { useParams } from "react-router";
 import { useEffect, useState } from "react";
 import ShowReview from "../ShowReview";
 
+/**
+ * Page for displaying all the car reviews/posts and their basic information
+ * @page
+ */
 export default function Review() {
   const { title } = useParams();
   const [review, setReview] = useState({});
