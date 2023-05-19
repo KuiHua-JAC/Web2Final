@@ -139,17 +139,6 @@ async function deleteSingleCar({ make, model, year }) {
  */
 async function updateCar(car, updatedCar) {
   try {
-    if (
-      await getCarCollection().findOne({
-        make: updatedCar.make,
-        model: updatedCar.model,
-        year: updatedCar.year,
-      })
-    )
-      throw new InvalidInputError(
-        "Cannot update car: the updated version is already in the database"
-      );
-
     let updatedNewCar = await getCarCollection().updateOne(car, {
       $set: {
         make: updatedCar.make,

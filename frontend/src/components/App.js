@@ -12,7 +12,7 @@ import AddCar from "./pages/AddCar";
 import AddReview from "./pages/AddReview";
 import UpdateReview from "./pages/UpdateReview";
 import SignUp from "./pages/SignUp";
-import LogIn from "./pages/LogIn"; 
+import LogIn from "./pages/LogIn";
 
 export default function App() {
   return (
@@ -29,7 +29,7 @@ export default function App() {
         <Route path="/cars" element={<Cars />} />
         <Route path="/cars/:make/:model/:year" element={<Car />} />
         <Route path="/cars/add" element={<AddCar />} />
-        <Route path="/cars/update/:title" element={<UpdateCar />} />
+        <Route path="/cars/update/:make/:model/:year" element={<UpdateCar />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Route>
     </Routes>
