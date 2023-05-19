@@ -20,9 +20,8 @@ $(window).resize(function () {
  */
 export default function Navbar() {
   const navigate = useNavigate();
-  const { state } = useLocation(); //TODO keep track of the signin state
   const [isLoggedIn, setIsLoggedIn] = useContext(LoggedInContext);
-  const [cookies, setCookie] = useCookies(["darkMode"]);
+  const [cookies, setCookie] = useCookies(["darkMode", "lang"]);
 
   return (
     <nav
@@ -85,19 +84,40 @@ export default function Navbar() {
                 : "font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:flex-row md:space-x-8 md:mt-0 md:border-0 bg-white"
             }
           >
-            <NavButton to="/" label="Home" />
-            <NavButton to="/cars" label="Cars" />
-            <NavButton to="/reviews" label="Reviews" />
+            <NavButton
+              to="/"
+              label={cookies.lang === "EN" ? "Home" : "Maison"}
+            />
+            <NavButton
+              to="/cars"
+              label={cookies.lang === "EN" ? "Cars" : "Autos"}
+            />
+            <NavButton
+              to="/reviews"
+              label={cookies.lang === "EN" ? "Reviews" : "JSP"}
+            />
             <NavButton to="/aboutus" label="About Us" />
             {isLoggedIn ? (
               <>
-                <NavButton to="/profile" label="Profile" />
-                <NavButton to="/logout" label="Log Out" />
+                <NavButton
+                  to="/profile"
+                  label={cookies.lang === "EN" ? "Profile" : "Profil"}
+                />
+                <NavButton
+                  to="/logout"
+                  label={cookies.lang === "EN" ? "Log out" : "Déconnexion"}
+                />
               </>
             ) : (
               <>
-                <NavButton to="/signup" label="Sign Up" />
-                <NavButton to="/login" label="Log In" />
+                <NavButton
+                  to="/signup"
+                  label={cookies.lang === "EN" ? "Sign up" : "S'inscrire"}
+                />
+                <NavButton
+                  to="/login"
+                  label={cookies.lang === "EN" ? "Log in" : "Authentification"}
+                />
               </>
             )}
           </ul>
