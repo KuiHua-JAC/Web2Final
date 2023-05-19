@@ -3,7 +3,6 @@ import $ from "jquery";
 /**
  * Provides the user with the error message of wrong action
  * @param {*} param0 the json response of the request passed in
- * @returns
  */
 export default function Alert({ response }) {
   $("#alert-border-2").show();

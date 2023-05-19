@@ -87,12 +87,12 @@ export default function UpdateReview() {
           onChange={(e) => setScore(e.target.value)}
         />
 
+        {/* Display purposes */}
         <label htmlFor="car">Car:</label>
         <input
           disabled
           className="text-black w-1/2 rounded-lg shadow-lg mb-4 bg-gray-300"
           type="text"
-          // What gets submitted remains the car object
           value={`${car.make} ${car.model} ${car.year}`}
         />
         <button

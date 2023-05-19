@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: pages/Cars.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: pages/Cars.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>// Kui Hua's code
+import Alert from "../Alert";
+import { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
+import Car from "../CarCard";
+
+/**
+ * Page for displaying all the cars and their basic information
+ * @page
+ */
+export default function Cars() {
+  const { state } = useLocation();
+  const navigate = useNavigate();
+  const [allCars, setAllCars] = useState([]);
+  const [carSearch, setCarSearch] = useState();
+
+  useEffect(() => {
+    async function getAllCars() {
+      try {
+        let response = await fetch(`http://localhost:1339/cars`);
+        if (response.ok) {
+          return await response.json();
+        } else {
+          throw new Error("Failed to fetch cars");
+        }
+      } catch (error) {
+        console.error(error);
+        return [];
+      }
+    }
+
+    async function fetchData() {
+      const cars = await getAllCars();
+      setAllCars(cars);
+    }
+    fetchData();
+  }, []);
+
+  return (
+    &lt;div>
+      {state &amp;&amp; state.response &amp;&amp; &lt;Alert response={state.response} />}
+      &lt;div className="px-4 py-10 bg-gradient-to-b from-red-500 to-red-800 h-screen">
+        &lt;main>
+          &lt;div className="mb-16 p-6">
+            &lt;h1 className="text-center text-5xl font-bold mb-8 capitalize">
+              Individual Car Search
+            &lt;/h1>
+            &lt;form
+              className="flex w-full"
+              onSubmit={() => {
+                const searchQuery = carSearch;
+                const make = carSearch.split(" ")[0];
+                const model = carSearch.split(" ")[1];
+                const year = carSearch.split(" ")[2];
+
+                Cookies.set("searchQuery", searchQuery);
+
+                navigate(`/cars/${make}/${model}/${year}`);
+              }}
+            >
+              &lt;input
+                type="text"
+                list="cars"
+                onChange={(event) => {
+                  setCarSearch(event.target.value);
+                }}
+                className="w-11/12 rounded-lg shadow-lg capitalize font-medium"
+              />
+              &lt;datalist id="cars">
+                {allCars.map((option) => (
+                  &lt;option
+                    key={option}
+                    value={`${option.make} ${option.model} ${option.year}`}
+                  />
+                ))}
+              &lt;/datalist>
+              &lt;button
+                disabled={
+                  !(
+                    carSearch &amp;&amp;
+                    carSearch.split(" ").length === 3 &amp;&amp;
+                    /^[a-zA-Z]+\s[a-zA-Z]+\s\d{4}$/.test(carSearch)
+                  )
+                } // regex taken from chatgpt
+                className="w-36 disabled:bg-gray-500 disabled:text-white disabled:border-0 bg-black rounded-lg shadow-lg text-white font-medium ml-4 hover:bg-white hover:text-black hover:border-2 hover:border-black"
+              >
+                Search
+              &lt;/button>
+            &lt;/form>
+          &lt;/div>
+          &lt;div>
+            &lt;div className="flex justify-between items-center mx-6">
+              &lt;h1 className="text-center text-5xl font-bold capitalize italic text-white">
+                All cars
+              &lt;/h1>
+              &lt;div className="flex justify-center items-center ">
+                &lt;a
+                  href="/cars/add"
+                  className="pb-1 h-14 w-14 bg-gray-100 rounded-full text-green-600 flex justify-center border-2 border-green-600 items-center hover:bg-green-600 hover:text-white text-2xl"
+                >
+                  +
+                &lt;/a>
+              &lt;/div>
+            &lt;/div>
+            &lt;div className="flex justify-center flex-wrap mt-8">
+              {allCars.length === 0 ? (
+                &lt;p className="font-bold text-lg">No cars available.&lt;/p>
+              ) : (
+                allCars.map((car) => &lt;Car car={car} />)
+              )}
+            &lt;/div>
+          &lt;/div>
+        &lt;/main>
+      &lt;/div>
+    &lt;/div>
+  );
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Fri May 19 2023 06:43:58 GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
