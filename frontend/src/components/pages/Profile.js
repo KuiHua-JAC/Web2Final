@@ -1,6 +1,7 @@
 import Cookies from "js-cookie";
 import UpdateUsername from "../UpdateUsername";
 import LanguageToggle from "../LanguageToggle";
+import DarkModeToggle from "../DarkModeToggle";
 
 /**
  * Page for showing a user's profile
@@ -14,6 +15,9 @@ export default function Profile() {
         {Cookies.get("searchQuery")}
         <p className="font-bold mt-8">Choose your language:</p>
         <LanguageToggle />
+
+        <p className="font-bold mt-8">Choose your color mode:</p>
+        <DarkModeToggle />
         <UpdateUsername></UpdateUsername>
       </div>
     </div>

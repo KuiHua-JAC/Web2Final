@@ -5,6 +5,7 @@ import $ from "jquery";
 import { useLocation } from "react-router-dom";
 import { LoggedInContext } from "./App";
 import { useContext } from "react";
+import { useCookies } from "react-cookie";
 
 $(window).resize(function () {
   // Get the current window width
@@ -21,9 +22,16 @@ export default function Navbar() {
   const navigate = useNavigate();
   const { state } = useLocation(); //TODO keep track of the signin state
   const [isLoggedIn, setIsLoggedIn] = useContext(LoggedInContext);
+  const [cookies, setCookie] = useCookies(["darkMode"]);
 
   return (
-    <nav className="border-gray-200 bg-black">
+    <nav
+      className={
+        cookies.darkMode === "dark"
+          ? "border-gray-200 bg-black"
+          : "border-gray-200 bg-white"
+      }
+    >
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         <button
           onClick={() => {
@@ -31,7 +39,13 @@ export default function Navbar() {
           }}
           className="flex items-center"
         >
-          <span className="self-center text-2xl font-semibold whitespace-nowrap text-white">
+          <span
+            className={
+              cookies.darkMode === "dark"
+                ? "self-center text-2xl font-semibold whitespace-nowrap text-white"
+                : "self-center text-2xl font-semibold whitespace-nowrap text-black"
+            }
+          >
             AutoFinder
           </span>
         </button>
@@ -64,22 +78,28 @@ export default function Navbar() {
           className="hidden max-h-4 w-full md:block md:w-7/12"
           id="navbar-default"
         >
-          <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:flex-row md:space-x-8 md:mt-0 md:border-0 bg-black md:dark:bg-black dark:border-gray-700">
+          <ul
+            className={
+              cookies.darkMode === "dark"
+                ? "font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:flex-row md:space-x-8 md:mt-0 md:border-0 bg-black"
+                : "font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:flex-row md:space-x-8 md:mt-0 md:border-0 bg-white"
+            }
+          >
             <NavButton to="/" label="Home" />
             <NavButton to="/cars" label="Cars" />
             <NavButton to="/reviews" label="Reviews" />
             <NavButton to="/aboutus" label="About Us" />
-            {isLoggedIn ? ( 
-            <>
-              <NavButton to="/profile" label="Profile" />
-              <NavButton to="/logout" label="Log Out" />
-            </>
-          ) : ( 
-            <>
-              <NavButton to="/signup" label="Sign Up" />
-              <NavButton to="/login" label="Log In" />
-            </>
-           )} 
+            {isLoggedIn ? (
+              <>
+                <NavButton to="/profile" label="Profile" />
+                <NavButton to="/logout" label="Log Out" />
+              </>
+            ) : (
+              <>
+                <NavButton to="/signup" label="Sign Up" />
+                <NavButton to="/login" label="Log In" />
+              </>
+            )}
           </ul>
         </div>
       </div>
