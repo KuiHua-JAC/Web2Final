@@ -4,13 +4,6 @@ export default function ShowReview({ car, review }) {
   const navigate = useNavigate();
   return (
     <div>
-      <div className="">
-        <img
-          className="object-contain h-full w-full rounded-lg shadow-xl max-h-[600px] object-center bg-black"
-          src={`https://source.unsplash.com/random/?${car.make}`}
-          alt="Ken block audi etron gt"
-        />
-      </div>
       <div className="mt-8">
         <h1 className="font-bold uppercase">{review.title}</h1>
         <p>

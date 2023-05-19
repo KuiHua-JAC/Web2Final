@@ -6,7 +6,7 @@ export default function AddCar() {
   const [model, setModel] = useState();
   const [year, setYear] = useState();
   const [description, setDescription] = useState();
-  const [imageUrl, setImageUrl] = useState();
+  const [image, setImage] = useState();
   const [username, setUsername] = useState();
   const navigate = useNavigate();
   return (
@@ -26,7 +26,7 @@ export default function AddCar() {
               model: model,
               year: year,
               description: description,
-              image: imageUrl,
+              image: image,
             }),
             headers: {
               "Content-type": "application/json; charset=UTF-8",
@@ -97,13 +97,13 @@ export default function AddCar() {
           type="text"
           placeholder="Image url"
           onChange={(event) => {
-            setImageUrl(event.target.value);
+            setImage(event.target.value);
           }}
           required
         />
 
         {/* ADD isAdmin, to only render the button if the guy is an admin */}
-        {make && model && year && imageUrl && description && (
+        {make && model && year && image && description && (
           <button
             className="mt-4 border rounded border-white hover:text-black hover:bg-white w-1/2"
             type="submit"

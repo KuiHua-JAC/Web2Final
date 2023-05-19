@@ -5,7 +5,7 @@ export default function RecentPosts() {
   useEffect(() => {
     async function getRecentPosts() {
       let response = await fetch(`http://localhost:1339/reviews`);
-      return await response.json();
+      if (response.ok) return await response.json();
     }
 
     async function fetchData() {

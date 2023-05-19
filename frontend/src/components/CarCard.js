@@ -12,7 +12,7 @@ export default function Car({ car }) {
         {/* make a component to generate car images */}
         <img
           className="object-cover h-full w-full rounded-lg shadow-xl"
-          src={"../../img/audietrongt.jpg"}
+          src={car.image}
           alt="Ken block audi etron gt"
         />
       </div>

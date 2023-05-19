@@ -2,14 +2,7 @@ import { useNavigate } from "react-router";
 export default function Post({ post }) {
   const navigate = useNavigate();
   return (
-    <div className="flex flex-col shadow-lg bg-white h-[400px] w-[600px] m-2 rounded-lg p-4 overflow-hidden hover:border-2 hover:border-black ">
-      <div className="h-1/2">
-        <img
-          className="object-cover h-full w-full rounded-lg shadow-xl"
-          src={`https://source.unsplash.com/random/?${post.car.make}`}
-          alt="Ken block audi etron gt"
-        />
-      </div>
+    <div className="flex flex-col shadow-lg bg-white h-[250px] w-[600px] m-2 rounded-lg p-4 overflow-hidden hover:border-2 hover:border-black ">
       <div className="mt-8 h-1/3">
         <h1 className="font-bold uppercase">{post.title}</h1>
         <p>

@@ -4,7 +4,7 @@ export default function ShowCar({ car }) {
       <div className="">
         <img
           className="object-contain h-full w-full rounded-lg shadow-xl max-h-[600px] object-center bg-black"
-          src={car.img}
+          src={car.image}
           alt="car"
         />
       </div>
